@@ -19,6 +19,7 @@ from ontoquant.ingest import tsio
 EXPOSURE_EDGE_T = 2.0  # 시장 팩터 외에는 |t| >= 2 인 익스포저만 그래프 엣지로
 MARKET_FACTORS = {"FF:MKT", "KR:MKT"}
 RECENT_EVENT_DAYS = 90
+GRAPH_EVENT_CAP = 12   # 그래프에는 영향도 상위 이벤트만 (피드에는 전체)
 
 
 def _write(path: Path, obj) -> None:
@@ -40,11 +41,13 @@ def export_graph(store: OntologyStore) -> dict:
         "totalValueBase": portfolio.get("totalValueBase"),
     }))
     for pos in store.query("Position", where={"portfolioId": pf_id}):
+        if pos.get("quantity") is None:
+            continue
         inst = store.get("Instrument", pos["instrumentId"]) or {}
         nodes.append(_node("Position", pos["positionId"],
                            inst.get("nameKo") or inst.get("name") or pos["instrumentId"], {
             "weight": pos.get("weight"), "marketValueBase": pos.get("marketValueBase"),
-            "instrumentId": pos["instrumentId"],
+            "instrumentId": pos["instrumentId"], "sectorId": inst.get("sectorId"),
         }))
         edges.append({"source": f"Portfolio:{pf_id}", "target": f"Position:{pos['positionId']}",
                       "linkType": "portfolioPositions", "props": {}})
@@ -57,6 +60,14 @@ def export_graph(store: OntologyStore) -> dict:
             "ticker": inst["ticker"], "market": inst["market"],
             "sectorId": inst.get("sectorId"), "currency": inst["currency"],
         }))
+    for sector in store.query("Sector"):
+        nodes.append(_node("Sector", sector["sectorId"],
+                           sector.get("nameKo") or sector["name"], {
+            "colorToken": sector.get("colorToken"),
+        }))
+    for rec in store.links("instrumentInSector"):
+        edges.append({"source": f"Instrument:{rec.fromPk}", "target": f"Sector:{rec.toPk}",
+                      "linkType": "instrumentInSector", "props": {}})
     used_factors = set()
     for exp in store.query("FactorExposure"):
         fid = exp["factorId"]
@@ -79,18 +90,26 @@ def export_graph(store: OntologyStore) -> dict:
                 "factorType": factor["factorType"],
             }))
 
-    # 이벤트 (최근) + 이벤트 링크
-    cutoff = (pd.Timestamp.utcnow() - pd.Timedelta(days=RECENT_EVENT_DAYS)).isoformat()
+    # 이벤트: 최근 7일 × 영향도 상위 N 만 (그래프 다이어트 — 나머지는 이벤트 피드에서)
+    impacts_for_graph = {}
+    impacts_path_g = config.COMPUTED_DIR / "impacts.json"
+    if impacts_path_g.exists():
+        impacts_for_graph = json.loads(impacts_path_g.read_text(encoding="utf-8"))
+    cutoff = (pd.Timestamp.utcnow() - pd.Timedelta(days=7)).isoformat()
     recent_events = [e for e in store.query("Event") if str(e.get("occurredAt", "")) >= cutoff]
+    recent_events.sort(key=lambda e: -(impacts_for_graph.get(e["eventId"], {})
+                                       .get("portfolioImpactScore") or 0))
+    recent_events = recent_events[:GRAPH_EVENT_CAP]
     event_types = {t: True for t in store.schema.interfaces["Event"].implementedBy}
     for ev in recent_events:
         etype = store.get_type_of(ev["eventId"], event_types.keys())
-        nodes.append(_node(etype or "Event", ev["eventId"], ev["title"], {
+        nodes.append(_node(etype or "Event", ev["eventId"], ev["title"][:48], {
             "eventType": ev.get("eventType"), "severity": ev.get("severity"),
-            "occurredAt": ev.get("occurredAt"),
+            "occurredAt": ev.get("occurredAt"), "sentiment": ev.get("sentiment"),
+            "impactScore": impacts_for_graph.get(ev["eventId"], {}).get("portfolioImpactScore"),
         }))
     node_ids = {n["id"] for n in nodes}
-    for link_type in ("eventAffectsInstrument", "eventDrivesFactor",
+    for link_type in ("eventAffectsInstrument", "eventDrivesFactor", "eventAffectsSector",
                       "insightFromEvent", "insightAboutInstrument"):
         for rec in store.links(link_type):
             src, tgt = f"{rec.fromType}:{rec.fromPk}", f"{rec.toType}:{rec.toPk}"
@@ -205,6 +224,50 @@ def export_all(store: OntologyStore, statuses: dict | None = None) -> dict:
     ])
     decisions = store.query("Decision", order_by="decidedAt")
     _write(out / "decisions.json", {"decisions": decisions, "actionLog": read_log(limit=200)})
+
+    # sectors.json — 섹터별 비중/손실기여/이벤트/인사이트 집계
+    from ontoquant.insights.sector_rules import sector_weights
+    totals, members = sector_weights(store)
+    contrib = {m["scopeId"]: m["value"] for m in store.query(
+        "RiskMetric", where={"metricType": "CONTRIB_VAR"})}
+    cutoff7 = (pd.Timestamp.utcnow() - pd.Timedelta(days=7)).isoformat()
+    inst_sector = {r.fromPk: r.toPk for r in store.links("instrumentInSector")}
+    event_types_l = store.schema.interfaces["Event"].implementedBy
+    sec_events: dict[str, int] = {}
+    for e in store.query("Event"):
+        if str(e.get("occurredAt", "")) < cutoff7:
+            continue
+        otype = store.get_type_of(e["eventId"], event_types_l)
+        if not otype:
+            continue
+        sids = {inst_sector.get(nb.pk) for nb in
+                store.neighbors(otype, e["eventId"], "eventAffectsInstrument", "out")}
+        sids |= {nb.pk for nb in store.neighbors(otype, e["eventId"], "eventAffectsSector", "out")}
+        for sid in filter(None, sids):
+            sec_events[sid] = sec_events.get(sid, 0) + 1
+    sector_insights: dict[str, list] = {}
+    for i in store.query("Insight"):
+        if i.get("sectorId"):
+            sector_insights.setdefault(i["sectorId"], []).append(i["insightId"])
+    _write(out / "sectors.json", [
+        {
+            "sectorId": s["sectorId"], "name": s["name"], "nameKo": s.get("nameKo"),
+            "colorToken": s.get("colorToken"),
+            "weight": round(totals.get(s["sectorId"], 0.0), 4),
+            "members": [
+                {"instrumentId": iid,
+                 "name": (instruments.get(iid, {}).get("nameKo") or instruments.get(iid, {}).get("name")),
+                 "weight": round(w, 4),
+                 "contribVar": contrib.get(f"{pf_id}:{iid}")}
+                for iid, w in sorted(members.get(s["sectorId"], []), key=lambda x: -x[1])
+            ],
+            "contribVar": round(sum(contrib.get(f"{pf_id}:{iid}", 0) or 0
+                                    for iid, _ in members.get(s["sectorId"], [])), 5),
+            "recentEvents": sec_events.get(s["sectorId"], 0),
+            "insightIds": sector_insights.get(s["sectorId"], []),
+        }
+        for s in sorted(store.query("Sector"), key=lambda s: -totals.get(s["sectorId"], 0))
+    ])
 
     _write(out / "scenarios.json", store.query("Scenario", order_by="createdAt"))
 

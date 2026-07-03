@@ -109,9 +109,12 @@ def compute_event_cars(store: OntologyStore) -> pd.DataFrame:
             res = compute_car(r_i, r_m, evt_date)
             if res is None:
                 continue
-            # knownAt = 이벤트창 종료 다음 거래일 (완결 + 계산 가능 시점)
+            # knownAt = 이벤트창 종료 다음 거래일. 다음 거래일 데이터가 아직 없으면
+            # 이번 실행에서는 기록하지 않는다 (idempotent 원장에 이른 knownAt 이 박제되는 것 방지)
             evt_end_idx = r_m.index.searchsorted(res["evtEnd"])
-            known_idx = min(evt_end_idx + 1, len(r_m.index) - 1)
+            known_idx = evt_end_idx + 1
+            if known_idx >= len(r_m.index):
+                continue
             rows.append({
                 "eventId": eid, "eventType": etype, "market": market,
                 "instrumentId": nb.pk,

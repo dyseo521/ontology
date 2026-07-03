@@ -257,7 +257,6 @@ def walk_forward_validate(store: OntologyStore, proposal: dict) -> dict:
 
     oos = pd.concat(oos_returns)
     oos_base = pd.concat(oos_base_returns)
-    dsr_trials = trial_srs + [None] * 0
     hist_n, hist_srs = count_trials(store, "rebalance-strategy")
     dsr = deflated_sharpe(oos, trial_srs + hist_srs)
     oos_sharpe = float(oos.mean() / oos.std() * np.sqrt(252)) if oos.std() > 0 else 0.0
@@ -267,12 +266,17 @@ def walk_forward_validate(store: OntologyStore, proposal: dict) -> dict:
         curve = (1 + r).cumprod()
         return float(-(curve / curve.cummax() - 1).min())
 
+    # ruleHash: 실제 사용한 그리드/규칙을 그대로 해시 (커스텀 그리드 붕괴 방지 — 시도 장부 무결성)
+    grid_used = (DEFAULT_GRID if grid_spec is True else grid_spec) if grid_spec else None
     metric_set = {
-        "mode": "EVENT_RULE_WF", "ruleHash": rule_hash(rule if len(combos) == 1 else {"grid": True, **DEFAULT_GRID}),
+        "mode": "EVENT_RULE_WF",
+        "ruleHash": rule_hash({"grid": grid_used} if grid_used else rule),
         "folds": len(folds), "nOosEvents": n_oos_events,
         "oosSharpe": round(oos_sharpe, 3), "oosSharpeBaseline": round(oos_base_sharpe, 3),
         "oosMdd": round(_mdd(oos), 4), "oosMddBaseline": round(_mdd(oos_base), 4),
-        "dsr": dsr["dsr"], "psr0": dsr["psr0"], "nTrials": dsr["nTrials"] + hist_n,
+        "dsr": dsr["dsr"], "psr0": dsr["psr0"],
+        "nTrials": dsr["nTrials"],            # DSR deflation 에 실제 쓰인 시도 수
+        "nTrialsHistory": hist_n,             # 이력상 서로 다른 rule-hash 수 (참고)
         "srAnnual": dsr["srAnnual"],
         "bestParams": best_params_per_fold[-1] if best_params_per_fold else rule,
         "oosDays": int(len(oos)),

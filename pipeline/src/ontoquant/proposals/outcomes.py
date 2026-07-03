@@ -32,8 +32,8 @@ def measure_outcome(store: OntologyStore, decision: dict, proposal: dict,
         return None
     decided = pd.Timestamp(str(decision["decidedAt"])[:10])
     start_pos = close.index.searchsorted(decided) + 1
-    if start_pos + horizon_bd > len(close.index):
-        return None  # 아직 지평 미도래
+    if start_pos + horizon_bd >= len(close.index):
+        return None  # 아직 지평 미도래 (경계 포함 — 조기 확정 방지)
     window = close.iloc[start_pos: start_pos + horizon_bd + 1]
     pre = {k: float(v) for k, v in pre_weights.items() if k in window.columns}
     post = apply_legs_to_weights(pre, proposal.get("legs") or [])
