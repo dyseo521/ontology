@@ -44,10 +44,19 @@ INITIAL_MODEL_VERSIONS = [
         "modelVersionId": "signal-model@1.0.0",
         "modelId": "signal-model",
         "version": "1.0.0",
+        "stage": "ARCHIVED",
+        "params": {"windowBd": 5, "newsKappa": 0.01},
+        "description": "[감사 실패로 보관] v1 — 유형 평균 CAR(동시대 반응)을 예측자로 오용, IC≈0",
+    },
+    {
+        "modelVersionId": "signal-model@2.0.0",
+        "modelId": "signal-model",
+        "version": "2.0.0",
         "stage": "STAGING",
-        "params": {"windowBd": 5, "newsKappa": 0.01, "sectorDamp": 0.5, "minN": 10,
-                   "conviction": "0.6*strength_pct + 0.4*evidence_share"},
-        "description": "온톨로지 매수/매도 시그널 — PIT CAR×심각도×연관도×감쇠 합성, 감사로 채점",
+        "params": {"alphas": "PEAD-SUE/EAR·insider(BUY,기회적)·news(fresh+/stale−)·reversal·momentum·flags",
+                   "combine": "shrunk-IC z-가중 (λ=0.5)", "horizons": [5, 20, 60],
+                   "citations": "Bernard-Thomas89, Brandt08, CMP12, Tetlock07-11, Jegadeesh90, JT93, Grinold-Kahn"},
+        "description": "문헌 검증 알파 결합 — 표류(drift)만 신호로, 반응(reaction) 사용 금지",
     },
 ]
 

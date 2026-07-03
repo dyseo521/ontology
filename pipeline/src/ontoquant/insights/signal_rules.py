@@ -1,10 +1,10 @@
-"""TRADE_SIGNAL 인사이트 — 오늘의 강한 매수/매도 신호를 확신도와 함께 표면화.
+"""TRADE_SIGNAL 인사이트 — v2 보드(알파 근거)를 확신도와 함께 표면화.
 
-발화 조건: conviction >= 0.5 그리고 (강도 백분위 >= 0.9 또는 '가장 강함' 표기 존재).
-최대 3건 (신호 희석 방지). 검증 배지는 근거 비율로:
-  evidenceShare >= 0.5 → VALIDATED (검증된 유형이 근거의 절반 이상)
-  아니면 UNVALIDATED.
-결과론 방지: 신호·확신도 전부 PIT (signals/engine 참조).
+발화: conviction >= 0.5 그리고 (강도 백분위 >= 0.9 또는 '가장 강함' 표기).
+최대 3건. 검증 배지 이중 게이트:
+  ① 신호 체계(결합 IC NW-t >= 2, 어느 지평이든)가 감사를 통과했고
+  ② 이 신호 근거의 절반 이상이 검증된 알파일 때만 VALIDATED.
+현재 체계가 미통과면 전부 UNVALIDATED (정직 우선).
 """
 from __future__ import annotations
 
@@ -26,8 +26,6 @@ def build(store: OntologyStore, as_of: str) -> tuple[list[dict], list[LinkRecord
         return [], []
     doc = json.loads(board_path.read_text(encoding="utf-8"))
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    event_types = store.schema.interfaces["Event"].implementedBy
-    # 신호 체계 자체가 감사(IC 유의성)를 통과했는가 — 통과 전엔 어떤 신호도 VALIDATED 불가
     audits = doc.get("audit") or {}
     system_validated = any(
         a and (a.get("meanIC") or 0) > 0 and (a.get("icTstat") or 0) >= 2.0
@@ -52,8 +50,11 @@ def build(store: OntologyStore, as_of: str) -> tuple[list[dict], list[LinkRecord
         note = row.get("strengthNote") or f"과거 대비 상위 {(1 - row['strength']) * 100:.0f}%"
         validated = system_validated and (row.get("evidenceShare") or 0) >= 0.5
         held = row.get("held")
+        reasons = ", ".join(
+            f"{e['label']}{'(검증됨)' if e.get('validated') else ''}"
+            for e in row.get("evidence", []))
         action = None
-        if is_buy or held:  # 비보유 종목의 매도 신호는 대응 액션 없음 (정보만)
+        if is_buy or held:  # 비보유 종목의 매도 신호는 정보만
             action = {
                 "label": f"{label} {side_ko} {STEP * 100:.0f}%p 검토",
                 "actionApiName": "proposeRebalance",
@@ -62,38 +63,30 @@ def build(store: OntologyStore, as_of: str) -> tuple[list[dict], list[LinkRecord
                     "legs": [{"instrumentId": row["instrumentId"],
                               "side": "BUY" if is_buy else "SELL",
                               "targetWeightDelta": STEP if is_buy else -STEP,
-                              "reason": f"온톨로지 신호 ({note})"}],
+                              "reason": f"신호 근거: {reasons} ({note})"}],
                     "rationale": (f"{label} 에 {note} 수준의 {side_ko} 신호. "
-                                  f"확신도 {row['conviction']:.2f}, 근거 중 검증 유형 "
-                                  f"{row['evidenceShare'] * 100:.0f}%."),
+                                  f"근거: {reasons}. 확신도 {row['conviction']:.2f}."),
                 },
             }
         iid_ins = f"ins_signal_{row['instrumentId'].replace(':', '_')}_{as_of}"
         insights.append({
             "insightId": iid_ins, "insightType": "TRADE_SIGNAL",
-            "title": f"{side_ko} 신호: {label} · {note}",
-            "narrative": (f"최근 5영업일 이벤트들이 {label} 에 "
-                          f"{'긍정' if is_buy else '부정'} 방향으로 모였습니다 "
-                          f"(5일 기대 효과 {row['expected5d']:+.1f}%). "
-                          f"확신도 {row['conviction']:.2f}: 과거 대비 강도 "
-                          f"{row['strength'] * 100:.0f}점, 검증된 유형 근거 "
-                          f"{row['evidenceShare'] * 100:.0f}%."
-                          + ("" if row.get("held") or not is_buy else " 현재 비보유 종목입니다.")),
-            "severity": round(min(1.0, abs(row["signal"]) * 30), 3),
+            "title": f"{side_ko} 신호: {label}" + (f" · {note}" if note else ""),
+            "narrative": (f"근거가 {label} 에 {'긍정' if is_buy else '부정'} 방향으로 "
+                          f"모였습니다: {reasons}. 확신도 {row['conviction']:.2f} "
+                          f"(과거 대비 강도 {row['strength'] * 100:.0f}점, "
+                          f"검증된 근거 {row['evidenceShare'] * 100:.0f}%, "
+                          f"근거 방향 일치 {row.get('agreement', 0) * 100:.0f}%)."
+                          + ("" if held or not is_buy else " 현재 비보유 종목입니다.")),
+            "severity": round(min(1.0, abs(row["signal"]) / 2), 3),
             "confidence": row["conviction"],
             "validationStatus": "VALIDATED" if validated else "UNVALIDATED",
-            "validationSummary": ("근거의 " + f"{row['evidenceShare'] * 100:.0f}% 가 통계 검증된 유형"
-                                  if validated else
+            "validationSummary": ("체계 감사 통과 + 근거 과반이 검증된 알파" if validated else
                                   ("신호 체계의 예측력이 아직 감사를 통과하지 못함"
-                                   if not system_validated else "검증된 유형 근거 부족")),
+                                   if not system_validated else "검증된 알파 근거 부족")),
             "recommendedAction": action,
             "createdAt": now, "asOfDate": as_of,
         })
         links.append(LinkRecord("insightAboutInstrument", "Insight", iid_ins,
                                 "Instrument", row["instrumentId"]))
-        for ev in row.get("evidence", [])[:3]:
-            etype_obj = store.get_type_of(ev["eventId"], event_types)
-            if etype_obj:
-                links.append(LinkRecord("insightFromEvent", "Insight", iid_ins,
-                                        etype_obj, ev["eventId"]))
     return insights, links

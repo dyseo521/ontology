@@ -112,6 +112,7 @@ class _PitMeanLookup:
 
     def __init__(self, cars: pd.DataFrame):
         self._groups: dict[tuple[str, str], tuple[np.ndarray, np.ndarray]] = {}
+        cars = cars.dropna(subset=["car"])  # EAR 만 확정된 반쪽 행 방어
         for (etype, market), g in cars.groupby(["eventType", "market"]):
             g = g.sort_values("knownAt")
             self._groups[(etype, market)] = (

@@ -14,12 +14,3 @@
 {"fromType":"Insight","from":"ins_seccluster_IT_","toType":"NewsEvent","to":"naver:0010016175266"}
 {"fromType":"Insight","from":"ins_seccluster_IT_","toType":"NewsEvent","to":"naver:0080005381219"}
 {"fromType":"Insight","from":"ins_seccluster_IT_","toType":"NewsEvent","to":"naver:0240000106640"}
-{"fromType":"Insight","from":"ins_signal_KRX_005380_","toType":"NewsEvent","to":"naver:0030014045908"}
-{"fromType":"Insight","from":"ins_signal_KRX_005380_","toType":"NewsEvent","to":"naver:0080005381219"}
-{"fromType":"Insight","from":"ins_signal_KRX_005380_","toType":"NewsEvent","to":"naver:0310001039676"}
-{"fromType":"Insight","from":"ins_signal_KRX_005930_","toType":"NewsEvent","to":"naver:0030014045805"}
-{"fromType":"Insight","from":"ins_signal_KRX_005930_","toType":"NewsEvent","to":"naver:0110004637936"}
-{"fromType":"Insight","from":"ins_signal_KRX_005930_","toType":"NewsEvent","to":"naver:4690000940264"}
-{"fromType":"Insight","from":"ins_signal_KRX_068270_","toType":"NewsEvent","to":"naver:0250003535205"}
-{"fromType":"Insight","from":"ins_signal_KRX_068270_","toType":"NewsEvent","to":"naver:0310001039592"}
-{"fromType":"Insight","from":"ins_signal_KRX_068270_","toType":"NewsEvent","to":"naver:2150001257508"}

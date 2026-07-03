@@ -26,3 +26,27 @@ properties:
   market:
     type: string
     enum: [KR, US]
+  # ── 지분 공시 방향 (DART elestock/majorstock 조인, signal-model v2 insider 알파) ──
+  ownerDirection:
+    type: string
+    nullable: true
+    enum: [BUY, SELL, NEUTRAL]
+    owner: PIPELINE
+    description: "증감주수 부호 (임원·주요주주/5%룰)"
+  ownerNetShares:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  ownerNetRatio:
+    type: double
+    nullable: true
+    owner: PIPELINE
+    description: "지분 증감 %p"
+  reporter:
+    type: string
+    nullable: true
+    owner: PIPELINE
+  reporterRole:
+    type: string
+    nullable: true
+    owner: PIPELINE

@@ -246,6 +246,11 @@
  "eventStudyThinTypes": [
   {
    "eventType": "ACQUISITION",
+   "market": "KR",
+   "n": 3
+  },
+  {
+   "eventType": "ACQUISITION",
    "market": "US",
    "n": 3
   },
@@ -253,6 +258,16 @@
    "eventType": "BONUS_ISSUE",
    "market": "KR",
    "n": 3
+  },
+  {
+   "eventType": "EXEC_CHANGE",
+   "market": "KR",
+   "n": 2
+  },
+  {
+   "eventType": "PRODUCT_LAUNCH",
+   "market": "KR",
+   "n": 1
   }
  ],
  "flags": [

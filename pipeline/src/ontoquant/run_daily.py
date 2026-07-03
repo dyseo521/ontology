@@ -35,9 +35,11 @@ def stage_ingest(statuses: dict) -> None:
                               "added": added, "errors": [e["status"] for e in errors][:3]}
         except Exception as exc:  # noqa: BLE001
             statuses[name] = {"status": f"failed: {exc}"}
-    from ontoquant.ingest import company, dart, edgar, fundamentals, news_kr, press_rss, rss
+    from ontoquant.ingest import (company, dart, dart_ownership, edgar, fundamentals,
+                                  news_kr, press_rss, rss)
     store = OntologyStore().build()
-    for name, mod in (("dart", dart), ("edgar", edgar), ("news_kr", news_kr),
+    for name, mod in (("dart", dart), ("dart_ownership", dart_ownership),
+                      ("edgar", edgar), ("news_kr", news_kr),
                       ("press_rss", press_rss), ("rss", rss),
                       ("company", company), ("fundamentals", fundamentals)):
         try:
@@ -76,10 +78,10 @@ def stage_propagation(statuses: dict) -> None:
 
 
 def stage_signals(statuses: dict) -> None:
-    from ontoquant.signals import audit as signal_audit
+    from ontoquant.signals import audit_v2
 
     store = OntologyStore().build()
-    statuses["signals"] = signal_audit.run(store)
+    statuses["signals"] = audit_v2.run(store)
 
 
 def stage_insights(statuses: dict) -> None:

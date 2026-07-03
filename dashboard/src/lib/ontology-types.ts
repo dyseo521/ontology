@@ -36,6 +36,11 @@ export interface DisclosureEvent {
   filingType?: string;
   filingDetail?: string;
   market: "KR" | "US";
+  ownerDirection?: "BUY" | "SELL" | "NEUTRAL";
+  ownerNetShares?: number;
+  ownerNetRatio?: number;
+  reporter?: string;
+  reporterRole?: string;
   eventId: string;
   eventType: string;
   occurredAt: string;
@@ -69,7 +74,7 @@ export interface EarningsEvent {
 export interface EvaluationRun {
   runId: string;
   modelVersionId: string;
-  runType: "FACTOR_QUALITY" | "EVENT_STUDY" | "PROPOSAL_BACKTEST" | "WALK_FORWARD" | "DECISION_OUTCOME" | "SIGNAL_AUDIT" | "SOURCE_VALIDITY";
+  runType: "FACTOR_QUALITY" | "EVENT_STUDY" | "PROPOSAL_BACKTEST" | "WALK_FORWARD" | "DECISION_OUTCOME" | "SIGNAL_AUDIT" | "SOURCE_VALIDITY" | "META_LABEL";
   metricSet: unknown;
   datasetRange: { start: string; end: string };
   passedGates: boolean;

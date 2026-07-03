@@ -166,17 +166,25 @@ export const loadSignals = () => readJson<SignalsDoc | null>("signals.json", nul
 
 export interface SignalsDoc {
   asOf: string;
+  modelVersion?: string;
   board: {
     instrumentId: string; name: string; ticker: string;
     held: boolean; tradable: boolean;
     direction: "BUY" | "SELL"; signal: number; expected5d: number;
+    expected20d?: number;
     strength: number; evidenceShare: number; conviction: number;
+    agreement?: number;
     strengthNote?: string | null;
-    evidence: { eventId: string; eventType: string; validated: boolean }[];
+    evidence: { alpha?: string; label?: string; contribution?: number;
+                eventId?: string; eventType?: string; validated: boolean }[];
   }[];
+  icTable?: { alpha: string; label: string; horizon: number;
+              meanIC: number; nwT: number; nDays: number }[];
   audit: Record<string, {
     meanIC?: number; icTstat?: number; hitRateStrong?: number | null;
     nObs?: number; byYear?: Record<string, unknown>;
+    sharpe?: number; sharpeBaseline?: number; activeReturnAnnual?: number;
+    dsr?: number; nTilts?: number; curveRunId?: string;
   } | null>;
   strategy?: {
     sharpe?: number; sharpeBaseline?: number;

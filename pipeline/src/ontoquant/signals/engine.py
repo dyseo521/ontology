@@ -1,4 +1,10 @@
-"""온톨로지 매수/매도 시그널 — 명확한 공식, 전 구간 Point-in-Time.
+"""[DEPRECATED · 비교 참조용] v1 시그널. 신규 경로는 signals/audit_v2 (+alphas/combine).
+
+감사 IC≈0 으로 signal-model@1.0.0 은 ARCHIVED. 실패 원인: 유형별 과거 평균 CAR 는
+"발표 시점 시장이 이미 반영한 반응"이라 미래 예측자가 아니다 (notes/ 부검 참조).
+PitStats 등 유틸은 v2 가 재사용하므로 파일 유지, 4주 병행 후 제거 예정.
+
+온톨로지 매수/매도 시그널 — 명확한 공식, 전 구간 Point-in-Time.
 
 시그널 (종목 i, 날짜 t — 단위: 5일 기대 초과수익률 근사):
 
@@ -60,6 +66,7 @@ class PitStats:
         self._g: dict[tuple[str, str], dict] = {}
         if cars is None or cars.empty:
             return
+        cars = cars.dropna(subset=["car"])  # EAR 만 확정된 반쪽 행 방어
         for (etype, market), g in cars.groupby(["eventType", "market"]):
             g = g.sort_values("knownAt")
             scar = g["scar"].to_numpy()

@@ -14,7 +14,7 @@ properties:
   runType:
     type: string
     enum: [FACTOR_QUALITY, EVENT_STUDY, PROPOSAL_BACKTEST, WALK_FORWARD, DECISION_OUTCOME,
-           SIGNAL_AUDIT, SOURCE_VALIDITY]
+           SIGNAL_AUDIT, SOURCE_VALIDITY, META_LABEL]
   metricSet:
     type: json
     description: "runType별 메트릭. EVENT_STUDY={eventType,market,n,carMean,tBmp,nOverlap}, PROPOSAL_BACKTEST={sharpe,sharpeBaseline,mdd,mddBaseline,psr,ruleHash}, WALK_FORWARD={oosSharpe,oosSharpeBaseline,oosMdd,dsr,nTrials,nOosEvents,folds}, DECISION_OUTCOME={proposalId,horizonBd,activeReturn,rollingHitRate20}, FACTOR_QUALITY={medianR2,coveragePct}"

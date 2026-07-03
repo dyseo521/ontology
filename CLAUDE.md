@@ -34,6 +34,11 @@ cd dashboard && npm run build                        # 정적 빌드 (out/)
 3. **검증 게이트**: 인사이트는 이벤트 스터디(n≥10, |tBmp|≥2), 제안은 백테스트
    (walk-forward 는 DSR≥0.95 포함)를 통과해야 승인 가능. 게이트를 우회하는
    코드를 추가하지 않는다. 시도(ruleHash) 장부는 지울 수 없다.
+   **시그널 v2 금지사항** (notes/signal-v1-postmortem.md, alpha-literature-map.md):
+   유형별 과거 CAR 평균을 예측 부호로 쓰는 v1 로직의 어떤 변형도 금지 (반응≠표류).
+   딥러닝/GBM/특징 자동탐색/파라미터(λ·감쇠·지평·문턱) 튜닝 금지 — 바꾸면 ruleHash
+   신규 시도로 장부 기록. 음수 IC 알파 부호 뒤집기 금지 (0 floor). 뉴스는 t→t+1 만.
+   ML 은 방향이 아니라 meta-labeling(필터/사이즈)만.
 4. **상태 변경은 액션으로만**: portfolio.json 등 writeback 은 ActionEngine
    (제출 기준 + 감사 로그) 경유. 직접 파일 수정은 시드/마이그레이션뿐.
 5. **거래 규칙**: `tradable: false` 종목(코스피 지수 프록시 등)은 매수/매도/보유

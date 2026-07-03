@@ -27,7 +27,7 @@ SEC_TAGS = {
     "totalLiabilities": ["Liabilities"],
     "totalEquity": ["StockholdersEquity"],
 }
-BACKFILL_YEARS = 3
+BACKFILL_YEARS = 6  # SUE 계절차분(YoY)에 충분한 표본 확보
 
 
 def _num(s: str | None) -> float | None:

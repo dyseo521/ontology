@@ -24,7 +24,8 @@ from ontoquant.core.store import OntologyStore
 from ontoquant.modeling.objective import active_model, record_evaluation
 
 EST_START, EST_END = -120, -21   # 추정창 (거래일 오프셋)
-EVT_START, EVT_END = -1, 5       # 이벤트창
+EVT_START, EVT_END = -1, 5       # 이벤트창 (검정용 CAR)
+EAR_START, EAR_END = -1, 1       # 발표창 (EAR — Brandt et al 2008, 예측자)
 KNOWN_LAG_BD = 6                 # CAR 완결 시차 (이벤트일 + 6 영업일)
 MIN_EST_OBS = 60
 GATE_MIN_N = 10
@@ -36,9 +37,13 @@ SKIP_TYPES = {"PERIODIC_REPORT", "REG_FD", "DISCLOSURE_OTHER", "NEWS",
 
 
 def compute_car(r_i: pd.Series, r_m: pd.Series, event_date: pd.Timestamp) -> dict | None:
-    """단일 이벤트 CAR + BMP 표준화. 데이터 부족 시 None.
+    """단일 이벤트 다중 창 CAR + BMP 표준화. 데이터 부족 시 None.
 
-    반환: {car, scar, estN, residStd, evtEnd}
+    추정창(α, β, 잔차분산)은 1회 계산하고 이벤트창을 두 번 적용:
+      car/scar: [-1,+5] (검정·심각도용, +6bd 확정)
+      ear/sear: [-1,+1] (발표창 초과수익 — 예측자, Brandt et al 2008, +2bd 확정)
+    반환: {car, scar, evtEndCar, ear, sear, evtEndEar, estN, residStd}
+    (ear 창이 짧아 데이터 경계에서 ear 만 확정될 수 있음 — car 는 None 가능)
     """
     df = pd.concat([r_i.rename("y"), r_m.rename("m")], axis=1).dropna()
     if df.empty:
@@ -51,8 +56,7 @@ def compute_car(r_i: pd.Series, r_m: pd.Series, event_date: pd.Timestamp) -> dic
     if idx + EST_START < 0:
         return None
     est = df.iloc[idx + EST_START: idx + EST_END]
-    evt = df.iloc[max(0, idx + EVT_START): idx + EVT_END + 1]
-    if len(est) < MIN_EST_OBS or len(evt) < (EVT_END - EVT_START):
+    if len(est) < MIN_EST_OBS:
         return None
     x, y = est["m"].to_numpy(), est["y"].to_numpy()
     var_m = x.var()
@@ -62,24 +66,55 @@ def compute_car(r_i: pd.Series, r_m: pd.Series, event_date: pd.Timestamp) -> dic
     alpha = float(y.mean() - beta * x.mean())
     resid = y - (alpha + beta * x)
     s2 = float(resid.var(ddof=2)) if len(resid) > 2 else float(resid.var())
-    ar = evt["y"] - (alpha + beta * evt["m"])
-    car = float(ar.sum())
-    # BMP 예측오차 보정 분산 (Campbell-Lo-MacKinlay §4.4.3)
-    L, M = len(evt), len(est)
-    m_dev_evt = float(((evt["m"] - x.mean()) ** 2).sum())
+    M = len(est)
     m_dev_est = float(((x - x.mean()) ** 2).sum())
-    var_car = s2 * (L + L * L / M + m_dev_evt / max(m_dev_est, 1e-12))
-    scar = car / np.sqrt(max(var_car, 1e-12))
-    return {"car": car, "scar": float(scar), "estN": M,
-            "residStd": float(np.sqrt(s2)), "evtEnd": evt.index[-1]}
+
+    def _window(start: int, end: int) -> tuple[float, float, pd.Timestamp] | None:
+        evt = df.iloc[max(0, idx + start): idx + end + 1]
+        # 전체 창 필수: 우측(라이브 엣지) 절단을 허용하면 불완전 CAR 가
+        # done=car.notna() 판정에 걸려 영구 동결된다 (검증 리뷰 BUG 4)
+        if len(evt) < (end - start + 1):
+            return None
+        ar = evt["y"] - (alpha + beta * evt["m"])
+        total = float(ar.sum())
+        # BMP 예측오차 보정 분산 (Campbell-Lo-MacKinlay §4.4.3) — 창 길이 L 별 재계산
+        L = len(evt)
+        m_dev_evt = float(((evt["m"] - x.mean()) ** 2).sum())
+        var_w = s2 * (L + L * L / M + m_dev_evt / max(m_dev_est, 1e-12))
+        return total, float(total / np.sqrt(max(var_w, 1e-12))), evt.index[-1]
+
+    ear_res = _window(EAR_START, EAR_END)
+    car_res = _window(EVT_START, EVT_END)
+    if ear_res is None and car_res is None:
+        return None
+    return {
+        "car": car_res[0] if car_res else None,
+        "scar": car_res[1] if car_res else None,
+        "evtEndCar": car_res[2] if car_res else None,
+        "ear": ear_res[0] if ear_res else None,
+        "sear": ear_res[1] if ear_res else None,
+        "evtEndEar": ear_res[2] if ear_res else None,
+        "estN": M, "residStd": float(np.sqrt(s2)),
+    }
+
+
+LEDGER_COLUMNS = ["eventId", "eventType", "market", "instrumentId", "eventDate",
+                  "knownAt", "car", "scar", "earKnownAt", "ear", "sear",
+                  "estN", "residStd"]
 
 
 def compute_event_cars(store: OntologyStore) -> pd.DataFrame:
-    """이벤트별 CAR 원장 증분 갱신 (idempotent, eventId 기준)."""
+    """이벤트별 CAR 원장 증분 갱신 (idempotent).
+
+    완결 판정은 car(장창) 기준 — ear 만 확정된 반쪽 행은 다음 실행에서
+    재계산되어 last-wins 로 교체된다 (라이브 엣지에서 EAR 가 4일 먼저 확정됨).
+    """
     existing = pd.read_parquet(CARS_PATH) if CARS_PATH.exists() else pd.DataFrame(
-        columns=["eventId", "eventType", "market", "instrumentId",
-                 "eventDate", "knownAt", "car", "scar", "estN", "residStd"])
-    done = set(existing["eventId"]) if len(existing) else set()
+        columns=LEDGER_COLUMNS)
+    for col in LEDGER_COLUMNS:  # 구버전 parquet 호환
+        if col not in existing.columns:
+            existing[col] = pd.NA
+    done = set(existing.loc[existing["car"].notna(), "eventId"]) if len(existing) else set()
 
     factors = {f["factorId"]: f for f in store.query("Factor")}
     mkt = {
@@ -113,37 +148,53 @@ def compute_event_cars(store: OntologyStore) -> pd.DataFrame:
             res = compute_car(r_i, r_m, evt_date)
             if res is None:
                 continue
-            # knownAt = 이벤트창 종료 다음 거래일. 다음 거래일 데이터가 아직 없으면
-            # 이번 실행에서는 기록하지 않는다 (idempotent 원장에 이른 knownAt 이 박제되는 것 방지)
-            evt_end_idx = r_m.index.searchsorted(res["evtEnd"])
-            known_idx = evt_end_idx + 1
-            if known_idx >= len(r_m.index):
+
+            def _known(evt_end) -> pd.Timestamp | None:
+                """창 종료 다음 거래일. 아직 없으면 None (이른 knownAt 박제 방지)."""
+                if evt_end is None:
+                    return None
+                k = r_m.index.searchsorted(evt_end) + 1
+                return r_m.index[k] if k < len(r_m.index) else None
+
+            known_car = _known(res["evtEndCar"])
+            known_ear = _known(res["evtEndEar"])
+            if known_car is None and known_ear is None:
                 continue
             rows.append({
                 "eventId": eid, "eventType": etype, "market": market,
-                "instrumentId": nb.pk,
-                "eventDate": evt_date, "knownAt": r_m.index[known_idx],
-                "car": res["car"], "scar": res["scar"],
+                "instrumentId": nb.pk, "eventDate": evt_date,
+                "knownAt": known_car,
+                "car": res["car"] if known_car is not None else None,
+                "scar": res["scar"] if known_car is not None else None,
+                "earKnownAt": known_ear,
+                "ear": res["ear"] if known_ear is not None else None,
+                "sear": res["sear"] if known_ear is not None else None,
                 "estN": res["estN"], "residStd": res["residStd"],
             })
             break  # 이벤트당 대표 종목 1개 (직접 링크 첫 번째)
     if rows:
         add = pd.DataFrame(rows)
         merged = pd.concat([existing, add], ignore_index=True)
-        merged["eventDate"] = pd.to_datetime(merged["eventDate"]).astype("datetime64[ns]")
-        merged["knownAt"] = pd.to_datetime(merged["knownAt"]).astype("datetime64[ns]")
+        merged = merged.drop_duplicates(["eventId"], keep="last")
+        for c in ("eventDate", "knownAt", "earKnownAt"):
+            merged[c] = pd.to_datetime(merged[c]).astype("datetime64[ns]")
         CARS_PATH.parent.mkdir(parents=True, exist_ok=True)
         merged.to_parquet(CARS_PATH, index=False)
         return merged
     return existing
 
 
-def load_cars() -> pd.DataFrame | None:
+def load_cars(complete_only: bool = True) -> pd.DataFrame | None:
+    """원장 로드. complete_only=True 면 car(장창) 확정 행만 — 검정/PIT 통계 소비자용.
+    EAR 알파는 complete_only=False 로 로드해 earKnownAt 기준으로 직접 필터한다."""
     if not CARS_PATH.exists():
         return None
     df = pd.read_parquet(CARS_PATH)
-    df["eventDate"] = pd.to_datetime(df["eventDate"]).astype("datetime64[ns]")
-    df["knownAt"] = pd.to_datetime(df["knownAt"]).astype("datetime64[ns]")
+    for c in ("eventDate", "knownAt", "earKnownAt"):
+        if c in df.columns:
+            df[c] = pd.to_datetime(df[c]).astype("datetime64[ns]")
+    if complete_only:
+        df = df.dropna(subset=["car"])
     return df
 
 

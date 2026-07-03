@@ -131,6 +131,29 @@ def get_insights(validationStatus: str | None = None) -> str:
 
 
 @mcp.tool()
+def explain_signal(instrumentId: str) -> str:
+    """오늘의 매수/매도 신호 분해 — 어떤 알파(근거)가 얼마나 기여했고 검증됐는지.
+
+    signal-model v2: 문헌 검증 알파(PEAD/내부자/뉴스/반전/모멘텀/증자·자사주)를
+    shrunk-IC 가중으로 결합. 성적표(알파×지평 IC)와 함께 반환한다.
+    """
+    import json as _j
+    from ontoquant import config as _cfg
+    path = _cfg.COMPUTED_DIR / "signals_today.json"
+    if not path.exists():
+        return _json({"error": "signals_today.json 없음 — signals 스테이지를 먼저 실행"})
+    doc = _j.loads(path.read_text(encoding="utf-8"))
+    row = next((b for b in doc.get("board", []) if b["instrumentId"] == instrumentId), None)
+    ic_rows = [r for r in doc.get("icTable", []) if r["horizon"] == 20]
+    return _json({
+        "asOf": doc.get("asOf"), "modelVersion": doc.get("modelVersion"),
+        "signal": row or {"note": "오늘 이 종목에는 유의미한 신호 없음 (|z|<0.2)"},
+        "systemAudit": doc.get("audit", {}).get("v2@20"),
+        "alphaScoreboard20d": ic_rows,
+    })
+
+
+@mcp.tool()
 def list_actions() -> str:
     """수행 가능한 액션 타입과 파라미터/제출 기준."""
     schema = _store().schema
