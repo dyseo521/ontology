@@ -178,6 +178,12 @@ export interface SignalsDoc {
     meanIC?: number; icTstat?: number; hitRateStrong?: number | null;
     nObs?: number; byYear?: Record<string, unknown>;
   } | null>;
+  strategy?: {
+    sharpe?: number; sharpeBaseline?: number;
+    mdd?: number; mddBaseline?: number;
+    totalReturn?: number; totalReturnBaseline?: number;
+    activeReturnAnnual?: number; nTilts?: number; curveRunId?: string;
+  } | null;
   sourceValidity?: { useful: string[]; weak: string[] };
 }
 

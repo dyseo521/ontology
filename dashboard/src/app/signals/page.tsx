@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Tooltip from "@/components/Tooltip";
-import { loadSignals } from "@/lib/data";
+import BacktestChart from "@/app/proposals/BacktestChart";
+import { loadBacktest, loadSignals } from "@/lib/data";
 import { fmtPct } from "@/lib/format";
 
 // 온톨로지 시그널 보드 + 감사 성적표 (정직 우선: 예측력 미검증이면 그대로 표시)
@@ -11,6 +12,8 @@ export default function SignalsPage() {
   const auditPassed = Object.values(audits).some(
     (a) => a && (a.meanIC ?? 0) > 0 && (a.icTstat ?? 0) >= 2);
   const validity = doc?.sourceValidity;
+  const strategy = doc?.strategy ?? null;
+  const strategyCurve = strategy?.curveRunId ? loadBacktest(strategy.curveRunId) : null;
 
   return (
     <div className="container">
@@ -72,6 +75,48 @@ export default function SignalsPage() {
           )}
         </div>
       </section>
+
+      {/* 이 신호를 따라 매매했다면 (전략 백테스트) */}
+      {strategy && (
+        <section className="section-sm">
+          <div className="hairline-card">
+            <div className="flex-between">
+              <h2 className="headline">
+                이 신호를 4년간 따라 매매했다면
+                <Tooltip text="강한 신호가 뜬 종목을 2%p 더 사거나(매수 신호) 덜 갖고(매도 신호) 5일 뒤 되돌리는 규칙을, 그 시점에 알 수 있던 정보만으로 4년간 반복한 결과입니다. 거래비용 포함." />
+              </h2>
+              <span className="caption">틸트 {strategy.nTilts}회 · 균등보유 대비</span>
+            </div>
+            <div className="grid-tiles" style={{ margin: "16px 0" }}>
+              <div className="soft-tile">
+                <div className="caption">총 수익</div>
+                <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>
+                  {fmtPct(strategy.totalReturn, 0)} <span className="caption">vs {fmtPct(strategy.totalReturnBaseline, 0)}</span>
+                </div>
+              </div>
+              <div className="soft-tile">
+                <div className="caption">성과 점수</div>
+                <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>
+                  {strategy.sharpe?.toFixed(2)} <span className="caption">vs {strategy.sharpeBaseline?.toFixed(2)}</span>
+                </div>
+              </div>
+              <div className="soft-tile">
+                <div className="caption">연간 초과수익</div>
+                <div className={`mono-num ${(strategy.activeReturnAnnual ?? 0) >= 0 ? "up" : "down"}`}
+                     style={{ fontSize: 22, fontWeight: 640 }}>
+                  {fmtPct(strategy.activeReturnAnnual, 1, true)}
+                </div>
+              </div>
+            </div>
+            {strategyCurve && <BacktestChart data={strategyCurve} />}
+            <p className="body-sm" style={{ marginTop: 12, opacity: 0.8 }}>
+              {(strategy.sharpe ?? 0) > (strategy.sharpeBaseline ?? 0)
+                ? "신호를 따른 쪽이 그대로 둔 것보다 나았습니다."
+                : "지금 규칙으로는 그대로 둔 것과 차이가 없거나 비용만큼 뒤집니다. 신호는 참고 지표로 쓰세요."}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* 오늘의 신호 보드 */}
       <section className="section-sm">

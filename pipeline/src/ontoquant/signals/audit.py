@@ -28,8 +28,11 @@ from ontoquant.insights.event_study import load_cars
 from ontoquant.modeling.objective import active_model, record_evaluation
 from ontoquant.signals import engine
 
-HISTORY_YEARS = 2
+HISTORY_YEARS = 4          # 가용 원장(2021-07~) 전체 — "몇 년 만의 신호" 표기 근거
 FWD_BD = 5
+STRAT_HOLD_BD = 5
+STRAT_STEP = 0.02
+STRAT_PCTL = 0.75          # 강신호 문턱: 직전 252일 |신호| 백분위 (PIT)
 HISTORY_PATHS = {
     "all": config.COMPUTED_DIR / "signal_history.parquet",
     "validatedOnly": config.COMPUTED_DIR / "signal_history_validated.parquet",
@@ -214,6 +217,91 @@ def source_validity(store: OntologyStore, close: pd.DataFrame, as_of: str) -> di
     return metric_set
 
 
+def strategy_backtest(store: OntologyStore, history: pd.DataFrame, as_of: str) -> dict:
+    """'이 신호를 따라 매매했다면' — 강신호 ±2%p 틸트(5일 보유) vs 균등보유.
+
+    결과론 배제 장치:
+    - 신호 자체가 PIT (engine)
+    - 강신호 문턱 = 각 시점의 '직전 252일' |신호| 백분위 (미래 분포를 모름)
+    - 규칙(±2%p, 5일, 75백분위)은 사전 고정 — ruleHash 로 시도 장부에 기록
+    """
+    from ontoquant.proposals import backtest as bt
+    from ontoquant.modeling.objective import rule_hash
+
+    close = bt.krw_close_matrix(store, lookback=1010)  # ~4년
+    if close is None or history.empty:
+        return {"status": "no-data"}
+    instruments = {i["instrumentId"]: i for i in store.query("Instrument")}
+    cols = [c for c in close.columns
+            if instruments.get(c, {}).get("tradable", True) is not False]
+    close = close[cols]
+    fees = np.array([[bt.COST_BP.get(instruments[c]["currency"], 0.001) for c in cols]])
+    base_w = {c: 1.0 / len(cols) for c in cols}
+
+    hist = history[history["instrumentId"].isin(cols)].copy()
+    hist["absSig"] = hist["signal"].abs()
+    # PIT 문턱: 날짜별 직전 252일 |신호| 분포의 75백분위
+    daily_max = hist.groupby("date")["absSig"].max().sort_index()
+    thresholds = daily_max.rolling(252, min_periods=60).quantile(STRAT_PCTL).shift(1)
+
+    overrides = []
+    n_tilts = 0
+    for _, row in hist.iterrows():
+        th = thresholds.get(row["date"])
+        if th is None or pd.isna(th) or row["absSig"] < th:
+            continue
+        pos = close.index.searchsorted(row["date"])
+        if pos >= len(close.index) - 1:
+            continue
+        end = close.index[min(pos + STRAT_HOLD_BD, len(close.index) - 1)]
+        step = STRAT_STEP if row["signal"] > 0 else -STRAT_STEP
+        overrides.append((row["date"], end, row["instrumentId"], step))
+        n_tilts += 1
+
+    strat = bt._sim_window(close, base_w, overrides, fees)
+    base = bt._sim_window(close, base_w, [], fees)
+    strat_v, base_v = strat.pop("value"), base.pop("value")
+    active = (strat_v.pct_change() - base_v.pct_change()).dropna()
+    metric_set = {
+        "mode": "SIGNAL_FOLLOW", "ruleHash": rule_hash(
+            {"step": STRAT_STEP, "holdBd": STRAT_HOLD_BD, "pctl": STRAT_PCTL}),
+        "nTilts": n_tilts,
+        "sharpe": strat["sharpe"], "sharpeBaseline": base["sharpe"],
+        "mdd": strat["mdd"], "mddBaseline": base["mdd"],
+        "totalReturn": round(float(strat_v.iloc[-1] / strat_v.iloc[0] - 1), 4),
+        "totalReturnBaseline": round(float(base_v.iloc[-1] / base_v.iloc[0] - 1), 4),
+        "activeReturnAnnual": round(float(active.mean() * 252), 4),
+    }
+    gates = [
+        ("sharpe > baseline", strat["sharpe"] > base["sharpe"],
+         f"{strat['sharpe']} vs {base['sharpe']}"),
+        ("totalReturn > baseline", metric_set["totalReturn"] > metric_set["totalReturnBaseline"],
+         f"{metric_set['totalReturn']} vs {metric_set['totalReturnBaseline']}"),
+    ]
+    model = active_model(store, "signal-model") or {"modelVersionId": "signal-model@1.0.0"}
+    run_obj = record_evaluation(store, model["modelVersionId"], "SIGNAL_AUDIT", metric_set,
+                                (str(close.index[0].date()), str(close.index[-1].date())),
+                                gates, run_key=f"signal-strategy:{as_of}")
+    bt._write_curve(run_obj["runId"], strat_v, base_v)
+    metric_set["curveRunId"] = run_obj["runId"]
+    return metric_set
+
+
+def _strength_note(wks: int | None, history_days: int) -> str | None:
+    """직관 표기: 주 → 년 스케일 자동 전환."""
+    if wks is None:
+        if history_days < 60:
+            return None
+        yrs = history_days / 252
+        return f"관측 {yrs:.0f}년 내 가장 강한 신호" if yrs >= 1.5 \
+            else f"관측 {max(1, int(history_days / 5))}주 내 가장 강한 신호"
+    if wks >= 104:
+        return f"약 {wks / 52:.0f}년 만에 가장 강한 신호"
+    if wks >= 8:
+        return f"{wks}주 만에 가장 강한 신호"
+    return None
+
+
 def todays_board(store: OntologyStore, history: pd.DataFrame, close: pd.DataFrame) -> list[dict]:
     """오늘의 시그널 보드 — 확신도/직관 표기 포함 (export·인사이트 소비)."""
     if close.empty:
@@ -232,12 +320,8 @@ def todays_board(store: OntologyStore, history: pd.DataFrame, close: pd.DataFram
         h = history[history["instrumentId"] == iid].set_index("date")["signal"].abs()
         conv = engine.conviction_of(v["signal"], v["contribs"], h.to_numpy())
         wks = engine.weeks_since_stronger(abs(v["signal"]), h.iloc[:-1] if len(h) else h)
-        if wks is None and len(h) >= 20:
-            note = f"관측 {max(1, int(len(h.index.unique()) / 5))}주 내 가장 강한 신호"
-        elif wks is not None and wks >= 8:
-            note = f"{wks}주 만에 가장 강한 신호"
-        else:
-            note = None
+        span_days = int((h.index.max() - h.index.min()).days * 252 / 365) if len(h) > 1 else 0
+        note = _strength_note(wks, span_days)
         top_contribs = sorted(v["contribs"], key=lambda c: -abs(c["contribution"]))[:3]
         board.append({
             "instrumentId": iid,
@@ -265,6 +349,7 @@ def run(store: OntologyStore, as_of: str | None = None) -> dict:
     history_val = build_history(store, close, variant="validatedOnly")
     audit_all = audit_signals(store, history_all, close, as_of, variant="all")
     audit_val = audit_signals(store, history_val, close, as_of, variant="validatedOnly")
+    strategy = strategy_backtest(store, history_all, as_of)
     validity = source_validity(store, close, as_of)
     board = todays_board(store, history_all, close)
     BOARD_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -272,10 +357,13 @@ def run(store: OntologyStore, as_of: str | None = None) -> dict:
         "asOf": as_of, "board": board,
         "audit": {"all": audit_all if audit_all.get("meanIC") is not None else None,
                   "validatedOnly": audit_val if audit_val.get("meanIC") is not None else None},
+        "strategy": strategy if strategy.get("sharpe") is not None else None,
         "sourceValidity": {"useful": validity.get("usefulSources", []),
                            "weak": validity.get("weakSources", [])},
     }, ensure_ascii=False), encoding="utf-8")
     return {"status": "ok", "historyRows": int(len(history_all)), "boardSignals": len(board),
             "icAll": audit_all.get("meanIC"), "icValidatedOnly": audit_val.get("meanIC"),
-            "icTstatValidatedOnly": audit_val.get("icTstat"),
+            "strategySharpe": strategy.get("sharpe"),
+            "strategyBaseline": strategy.get("sharpeBaseline"),
+            "nTilts": strategy.get("nTilts"),
             "usefulSources": len(validity.get("usefulSources", []))}
