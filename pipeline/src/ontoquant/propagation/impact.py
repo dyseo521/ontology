@@ -41,6 +41,26 @@ def propagate(store: OntologyStore, event: dict, event_type: str,
             "detail": f"직접 연관 {rel:.2f} × 비중 {w:.1%}",
         })
 
+    # SECTOR 경로: Event →(affectsSector)→ Sector ←(in)← Instrument(멤버) ← Position
+    seen_direct = {p["instrumentId"] for p in paths}
+    for snb in store.neighbors(event_type, event["eventId"], "eventAffectsSector", "out"):
+        rel = float(snb.link.props.get("relevance", 0.5))
+        for mnb in store.neighbors("Sector", snb.pk, "instrumentInSector", "in"):
+            if mnb.pk in seen_direct:
+                continue  # 직접 링크가 있으면 섹터 경로는 중복
+            pos = weights.get(mnb.pk)
+            if pos is None:
+                continue
+            pid, w, label = pos
+            paths.append({
+                "type": "SECTOR", "score": round(rel * 0.5 * w, 6),
+                "instrumentId": mnb.pk, "positionId": pid, "label": label,
+                "sectorId": snb.pk,
+                "nodes": [f"{event_type}:{event['eventId']}", f"Sector:{snb.pk}",
+                          f"Instrument:{mnb.pk}", f"Position:{pid}", "Portfolio:main"],
+                "detail": f"섹터 {snb.obj.get('nameKo') or snb.pk} 경유 {rel:.2f} × 비중 {w:.1%}",
+            })
+
     for fnb in store.neighbors(event_type, event["eventId"], "eventDrivesFactor", "out"):
         rel = float(fnb.link.props.get("relevance", 0.5))
         for enb in store.neighbors("Factor", fnb.pk, "exposureFactor", "in"):
