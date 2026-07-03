@@ -144,6 +144,19 @@ def export_all(store: OntologyStore, statuses: dict | None = None) -> dict:
         }})
     _write(out / "portfolio.json", {"portfolio": portfolio, "positions": pos_view})
 
+    # instruments.json — 유니버스 마스터 (비보유 종목 상세 페이지용)
+    _write(out / "instruments.json", [
+        {
+            "instrumentId": i["instrumentId"], "ticker": i["ticker"],
+            "name": i["name"], "nameKo": i.get("nameKo"),
+            "market": i["market"], "currency": i["currency"],
+            "assetClass": i["assetClass"], "sectorId": i.get("sectorId"),
+            "sector": sectors.get(i.get("sectorId") or "", {}).get("nameKo") or i.get("sectorId"),
+            "tradable": i.get("tradable", True) is not False,
+        }
+        for i in sorted(instruments.values(), key=lambda x: x["instrumentId"])
+    ])
+
     # risk metrics (최신) — portfolio.json 과 분리해 홈 타일에서 소비
     metrics = store.query("RiskMetric")
     _write(out / "risk_metrics.json", metrics)

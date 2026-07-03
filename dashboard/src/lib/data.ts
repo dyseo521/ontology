@@ -161,6 +161,13 @@ export const loadDecisions = () => readJson<{ decisions: DecisionView[]; actionL
 export const loadSchemaDoc = () => readJson<SchemaDoc>("schema.json", { objectTypes: [], interfaces: [], linkTypes: [] });
 export const loadScenarios = () => readJson<ScenarioView[]>("scenarios.json", []);
 export const loadSectors = () => readJson<SectorView[]>("sectors.json", []);
+export const loadInstruments = () => readJson<InstrumentMaster[]>("instruments.json", []);
+
+export interface InstrumentMaster {
+  instrumentId: string; ticker: string; name: string; nameKo?: string;
+  market: string; currency: string; assetClass: string;
+  sectorId?: string; sector?: string; tradable: boolean;
+}
 
 export function loadPrices(instrumentId: string): { instrumentId: string; dates: string[]; close: number[] } | null {
   return readJson(path.join("prices", `${instrumentId.replace(/:/g, "_")}.json`), null as never);
