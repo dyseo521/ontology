@@ -1,0 +1,20 @@
+apiName: NewsEvent
+displayName: 뉴스 이벤트
+description: RSS 뉴스 (Yahoo per-ticker / DART todayRSS). Event 인터페이스 구현.
+icon: rss
+color: block-pink
+status: ACTIVE
+implements: [Event]
+primaryKey: eventId
+titleProperty: title
+properties:
+  publisher:
+    type: string
+    nullable: true
+  feedSource:
+    type: string
+    enum: [YAHOO_RSS, DART_RSS]
+  tickerHint:
+    type: string
+    nullable: true
+    description: "피드 조회에 사용한 티커"

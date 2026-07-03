@@ -1,0 +1,31 @@
+# ── SECRETS: 절대 커밋 금지 ──────────────────────────────
+api-key.txt
+*.key
+.env
+.env.*
+
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# ── Node / Next.js ───────────────────────────────────────
+node_modules/
+dashboard/.next/
+dashboard/out/
+*.tsbuildinfo
+.eslintcache
+
+# ── 휘발성 런타임 (매 실행 재구축) ────────────────────────
+data/runtime.db
+data/runtime.db-*
+
+# ── ML 모델 캐시 ─────────────────────────────────────────
+.cache/
+models--*/
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store

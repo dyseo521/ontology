@@ -1,0 +1,105 @@
+{
+  "portfolio": {
+    "portfolioId": "main",
+    "name": "샘플 KR+US 혼합 포트폴리오",
+    "baseCurrency": "KRW",
+    "benchmark": "ARCA:SPY",
+    "riskLimits": {
+      "maxWeightPerName": 0.2,
+      "maxVar95": 0.03,
+      "maxSectorWeight": 0.45
+    }
+  },
+  "positions": [
+    {
+      "instrumentId": "KRX:005930",
+      "quantity": 194.0,
+      "avgCostLocal": 72000,
+      "openedAt": "2025-03-10"
+    },
+    {
+      "instrumentId": "KRX:000660",
+      "quantity": 26.0,
+      "avgCostLocal": 178000,
+      "openedAt": "2025-05-02"
+    },
+    {
+      "instrumentId": "KRX:035420",
+      "quantity": 40,
+      "avgCostLocal": 196000,
+      "openedAt": "2025-02-14"
+    },
+    {
+      "instrumentId": "KRX:005380",
+      "quantity": 30,
+      "avgCostLocal": 232000,
+      "openedAt": "2025-06-20"
+    },
+    {
+      "instrumentId": "KRX:035720",
+      "quantity": 100,
+      "avgCostLocal": 47500,
+      "openedAt": "2025-04-08"
+    },
+    {
+      "instrumentId": "KRX:068270",
+      "quantity": 30,
+      "avgCostLocal": 176000,
+      "openedAt": "2025-07-11"
+    },
+    {
+      "instrumentId": "KRX:069500",
+      "quantity": 454.0,
+      "avgCostLocal": 35800,
+      "openedAt": "2025-01-06"
+    },
+    {
+      "instrumentId": "XNAS:AAPL",
+      "quantity": 30,
+      "avgCostLocal": 186.5,
+      "openedAt": "2025-02-03"
+    },
+    {
+      "instrumentId": "XNAS:MSFT",
+      "quantity": 15,
+      "avgCostLocal": 392.0,
+      "openedAt": "2025-03-17"
+    },
+    {
+      "instrumentId": "XNAS:NVDA",
+      "quantity": 12.0,
+      "avgCostLocal": 114.0,
+      "openedAt": "2025-05-27"
+    },
+    {
+      "instrumentId": "XNAS:GOOGL",
+      "quantity": 20,
+      "avgCostLocal": 161.0,
+      "openedAt": "2025-04-21"
+    },
+    {
+      "instrumentId": "XNAS:TSLA",
+      "quantity": 12,
+      "avgCostLocal": 228.0,
+      "openedAt": "2025-06-09"
+    },
+    {
+      "instrumentId": "XNYS:JPM",
+      "quantity": 15,
+      "avgCostLocal": 197.5,
+      "openedAt": "2025-01-27"
+    },
+    {
+      "instrumentId": "ARCA:SPY",
+      "quantity": 18.42,
+      "avgCostLocal": 522.0,
+      "openedAt": "2025-01-06"
+    },
+    {
+      "instrumentId": "XNAS:QQQ",
+      "quantity": 10,
+      "avgCostLocal": 448.0,
+      "openedAt": "2025-02-24"
+    }
+  ]
+}

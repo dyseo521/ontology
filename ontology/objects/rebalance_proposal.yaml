@@ -1,0 +1,34 @@
+apiName: RebalanceProposal
+displayName: 리밸런싱 제안
+description: 매수/매도/보유 제안. ProposedAction 인터페이스 구현. 백테스트 게이트 통과 후 승인 가능.
+icon: shuffle
+color: block-coral
+status: ACTIVE
+implements: [ProposedAction]
+primaryKey: proposalId
+titleProperty: title
+properties:
+  legs:
+    type: array
+    items:
+      type: struct
+      fields:
+        instrumentId: {type: string}
+        side: {type: string, enum: [BUY, SELL, HOLD]}
+        targetWeightDelta: {type: double, description: "비중 변화 (+0.02 = +2%p)"}
+        estQuantity: {type: double, nullable: true}
+        reason: {type: string, nullable: true}
+  expectedImpact:
+    type: struct
+    nullable: true
+    fields:
+      var95Delta: {type: double, nullable: true}
+      betaDelta: {type: double, nullable: true}
+      hhiDelta: {type: double, nullable: true}
+  strategyRule:
+    type: json
+    nullable: true
+    description: "제안을 생성한 파라미터화된 규칙 (백테스트 재현용)"
+  backtestRunId:
+    type: string
+    nullable: true

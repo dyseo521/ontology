@@ -1,0 +1,39 @@
+apiName: Insight
+displayName: 인사이트
+description: 이벤트/리스크에서 도출된 해석. 이벤트 스터디로 검증되어야 VALIDATED.
+icon: lightbulb
+color: block-lime
+status: ACTIVE
+primaryKey: insightId
+titleProperty: title
+properties:
+  insightId:
+    type: string
+  insightType:
+    type: string
+    enum: [EVENT_IMPACT, LIMIT_BREACH, EXPOSURE_SHIFT, CONCENTRATION, FACTOR_MOVE]
+  title:
+    type: string
+  narrative:
+    type: string
+    description: "서사. 파이프라인이 초안 생성, MCP에서 Claude가 다듬어 writeback 가능"
+  severity:
+    type: double
+    description: "0~1"
+  confidence:
+    type: double
+    nullable: true
+  validationStatus:
+    type: string
+    enum: [VALIDATED, UNVALIDATED, REJECTED]
+  validationSummary:
+    type: string
+    nullable: true
+    description: "예: 'CAR -2.1% t=-3.4 n=27' 또는 '표본 부족'"
+  evaluationRunId:
+    type: string
+    nullable: true
+  createdAt:
+    type: timestamp
+  asOfDate:
+    type: date

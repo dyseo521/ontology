@@ -1,0 +1,29 @@
+apiName: Scenario
+displayName: 시나리오
+description: 온톨로지 fork/sandbox. 액션을 오버레이에 적용해 what-if 분석, commit 또는 discard.
+icon: git-branch
+color: block-cream
+status: ACTIVE
+primaryKey: scenarioId
+titleProperty: name
+properties:
+  scenarioId:
+    type: string
+  name:
+    type: string
+  baseDate:
+    type: date
+  status:
+    type: string
+    enum: [OPEN, COMMITTED, DISCARDED]
+  appliedActionIds:
+    type: array
+    items: {type: string}
+  diffSummary:
+    type: json
+    nullable: true
+  createdAt:
+    type: timestamp
+  createdBy:
+    type: string
+    nullable: true

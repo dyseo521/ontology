@@ -1,0 +1,36 @@
+apiName: EvaluationRun
+displayName: 평가 실행
+description: MetricSet 패턴 — 모델 버전 + 데이터 범위에 바인딩된 평가 결과와 게이트 판정.
+icon: clipboard-check
+color: surface-soft
+status: ACTIVE
+primaryKey: runId
+titleProperty: runId
+properties:
+  runId:
+    type: string
+  modelVersionId:
+    type: string
+  runType:
+    type: string
+    enum: [FACTOR_QUALITY, EVENT_STUDY, PROPOSAL_BACKTEST]
+  metricSet:
+    type: json
+    description: "runType별 메트릭. EVENT_STUDY={eventType,n,carMean,carT,window,hitRate}, PROPOSAL_BACKTEST={sharpe,sharpeBaseline,mdd,mddBaseline,turnover,nTrades}, FACTOR_QUALITY={medianR2,minR2,betaStability,coveragePct}"
+  datasetRange:
+    type: struct
+    fields:
+      start: {type: date}
+      end: {type: date}
+  passedGates:
+    type: boolean
+  gateResults:
+    type: array
+    items:
+      type: struct
+      fields:
+        gate: {type: string}
+        passed: {type: boolean}
+        detail: {type: string, nullable: true}
+  createdAt:
+    type: timestamp

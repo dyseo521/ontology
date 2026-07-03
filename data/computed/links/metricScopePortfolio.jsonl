@@ -1,0 +1,5 @@
+{"fromType":"RiskMetric","from":"PORTFOLIO:main:BETA_MKT","toType":"Portfolio","to":"main"}
+{"fromType":"RiskMetric","from":"PORTFOLIO:main:HHI","toType":"Portfolio","to":"main"}
+{"fromType":"RiskMetric","from":"PORTFOLIO:main:MDD_1Y","toType":"Portfolio","to":"main"}
+{"fromType":"RiskMetric","from":"PORTFOLIO:main:VAR_95_1D","toType":"Portfolio","to":"main"}
+{"fromType":"RiskMetric","from":"PORTFOLIO:main:VOL_30D","toType":"Portfolio","to":"main"}

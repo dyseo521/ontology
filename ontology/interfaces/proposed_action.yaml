@@ -1,0 +1,23 @@
+apiName: ProposedAction
+displayName: 제안된 액션
+description: 시스템이 생성하고 사람이 결재하는 제안의 공통 형태.
+color: block-coral
+sharedProperties:
+  proposalId:
+    type: string
+  title:
+    type: string
+  status:
+    type: string
+    enum: [DRAFT, PENDING, APPROVED, REJECTED, EXECUTED, EXPIRED]
+  rationale:
+    type: string
+    description: "추천 근거 (decision capture의 recommendation reasoning)"
+  createdAt:
+    type: timestamp
+  createdBy:
+    type: string
+    description: "생성 주체. 예: pipeline, claude-mcp"
+  asOfDate:
+    type: date
+implementedBy: [RebalanceProposal]

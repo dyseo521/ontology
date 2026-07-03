@@ -1,0 +1,47 @@
+apiName: Factor
+displayName: 팩터
+description: 리스크 팩터 (스타일/시장/매크로). 시계열은 data/source/factors/에 저장.
+icon: trending-up
+color: block-lilac
+status: ACTIVE
+primaryKey: factorId
+titleProperty: name
+properties:
+  factorId:
+    type: string
+    description: "예: FF:MKT, KR:KOSPI, MACRO:DGS10"
+  name:
+    type: string
+  nameKo:
+    type: string
+    nullable: true
+  factorType:
+    type: string
+    enum: [STYLE, MARKET, MACRO]
+  source:
+    type: string
+    enum: [KEN_FRENCH, FRED, NAVER, COMPUTED]
+  sourceSeriesId:
+    type: string
+    nullable: true
+    description: "FRED series_id 또는 Ken French 컬럼명"
+  unit:
+    type: string
+    enum: [RATIO, PCT, LEVEL]
+  transform:
+    type: string
+    enum: [LEVEL, DIFF, LOGRET, PCT_RETURN]
+    description: "회귀 우변에 넣기 전 적용할 변환"
+  regressionGroup:
+    type: string
+    enum: [US_STYLE, US_MACRO, KR_CORE, NONE]
+    description: "어느 분리 회귀에 속하는지 (다중공선성 방지)"
+  lagForKr:
+    type: integer
+    nullable: true
+    description: "KR 종목 회귀 시 적용할 래그(일). US 팩터=1"
+timeSeriesProperties:
+  value:
+    frequency: daily
+    unit: level
+    storage: "data/source/factors/{sourceKey}.parquet"

@@ -1,0 +1,20 @@
+apiName: MacroEvent
+displayName: 매크로 이벤트
+description: FRED 시리즈 급변동 (|z|>=2, 252d). Event 인터페이스 구현.
+icon: globe
+color: block-pink
+status: ACTIVE
+implements: [Event]
+primaryKey: eventId
+titleProperty: title
+properties:
+  seriesId:
+    type: string
+    description: "FRED series_id"
+  value:
+    type: double
+  change1d:
+    type: double
+    nullable: true
+  zScore:
+    type: double

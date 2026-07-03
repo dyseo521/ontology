@@ -1,0 +1,15 @@
+{"fromType":"RiskMetric","from":"POSITION:main:ARCA:SPY:CONTRIB_VAR","toType":"Position","to":"main:ARCA:SPY"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:000660:CONTRIB_VAR","toType":"Position","to":"main:KRX:000660"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:005380:CONTRIB_VAR","toType":"Position","to":"main:KRX:005380"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:005930:CONTRIB_VAR","toType":"Position","to":"main:KRX:005930"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:035420:CONTRIB_VAR","toType":"Position","to":"main:KRX:035420"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:035720:CONTRIB_VAR","toType":"Position","to":"main:KRX:035720"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:068270:CONTRIB_VAR","toType":"Position","to":"main:KRX:068270"}
+{"fromType":"RiskMetric","from":"POSITION:main:KRX:069500:CONTRIB_VAR","toType":"Position","to":"main:KRX:069500"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNAS:AAPL:CONTRIB_VAR","toType":"Position","to":"main:XNAS:AAPL"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNAS:GOOGL:CONTRIB_VAR","toType":"Position","to":"main:XNAS:GOOGL"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNAS:MSFT:CONTRIB_VAR","toType":"Position","to":"main:XNAS:MSFT"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNAS:NVDA:CONTRIB_VAR","toType":"Position","to":"main:XNAS:NVDA"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNAS:QQQ:CONTRIB_VAR","toType":"Position","to":"main:XNAS:QQQ"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNAS:TSLA:CONTRIB_VAR","toType":"Position","to":"main:XNAS:TSLA"}
+{"fromType":"RiskMetric","from":"POSITION:main:XNYS:JPM:CONTRIB_VAR","toType":"Position","to":"main:XNYS:JPM"}

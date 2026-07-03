@@ -1,0 +1,28 @@
+apiName: DisclosureEvent
+displayName: 공시 이벤트
+description: DART/SEC 공시. Event 인터페이스 구현.
+icon: file-text
+color: block-pink
+status: ACTIVE
+implements: [Event]
+primaryKey: eventId
+titleProperty: title
+properties:
+  rcpNo:
+    type: string
+    nullable: true
+    description: "DART 접수번호 또는 EDGAR accession number"
+  corpCode:
+    type: string
+    nullable: true
+  filingType:
+    type: string
+    nullable: true
+    description: "DART 공시유형 또는 8-K 등 SEC form type"
+  filingDetail:
+    type: string
+    nullable: true
+    description: "DART 상세유형 또는 8-K item 코드 (예: 2.02)"
+  market:
+    type: string
+    enum: [KR, US]

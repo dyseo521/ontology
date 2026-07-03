@@ -1,0 +1,30 @@
+apiName: Event
+displayName: 이벤트
+description: 모든 이벤트 타입의 공통 형태 (인터페이스 다형성). 구현 타입에 sharedProperties가 주입된다.
+color: block-pink
+sharedProperties:
+  eventId:
+    type: string
+    description: "예: dart:20260703000123, edgar:0000320193-26-000045, macro:VIXCLS:2026-07-02, rss:yahoo:<hash>"
+  eventType:
+    type: string
+    description: "세분류. 예: CAPITAL_INCREASE, BUYBACK, MERGER, EARNINGS_BEAT, EARNINGS_MISS, RATE_SHOCK, VOL_SPIKE, NEWS"
+  occurredAt:
+    type: timestamp
+  title:
+    type: string
+  summary:
+    type: string
+    nullable: true
+  severity:
+    type: double
+    nullable: true
+    description: "0~1. events/severity.py 산출"
+  sourceUrl:
+    type: string
+    nullable: true
+  embeddingId:
+    type: string
+    nullable: true
+    description: "data/embeddings/index 내 행 ID"
+implementedBy: [DisclosureEvent, EarningsEvent, MacroEvent, NewsEvent]

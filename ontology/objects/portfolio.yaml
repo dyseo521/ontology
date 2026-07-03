@@ -1,0 +1,38 @@
+apiName: Portfolio
+displayName: 포트폴리오
+description: 사용자 포트폴리오. writeback 계층(portfolio.json)이 정본.
+icon: briefcase
+color: block-navy
+status: ACTIVE
+primaryKey: portfolioId
+titleProperty: name
+properties:
+  portfolioId:
+    type: string
+  name:
+    type: string
+    owner: USER
+  baseCurrency:
+    type: string
+    enum: [KRW, USD]
+    owner: USER
+  benchmark:
+    type: string
+    nullable: true
+    owner: USER
+    description: "벤치마크 instrumentId. 예: ARCA:SPY"
+  riskLimits:
+    type: struct
+    owner: USER
+    fields:
+      maxWeightPerName: {type: double}
+      maxVar95: {type: double, description: "1일 VaR95 한도 (포트폴리오 가치 대비 비율)"}
+      maxSectorWeight: {type: double}
+  totalValueBase:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  dailyPnlBase:
+    type: double
+    nullable: true
+    owner: PIPELINE

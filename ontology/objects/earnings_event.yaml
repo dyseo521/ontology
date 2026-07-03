@@ -1,0 +1,26 @@
+apiName: EarningsEvent
+displayName: 실적 이벤트
+description: 실적 발표 (DART 실적공시 / 8-K item 2.02). Event 인터페이스 구현.
+icon: bar-chart
+color: block-pink
+status: ACTIVE
+implements: [Event]
+primaryKey: eventId
+titleProperty: title
+properties:
+  period:
+    type: string
+    nullable: true
+    description: "예: 2026Q1"
+  epsActual:
+    type: double
+    nullable: true
+  epsEstimate:
+    type: double
+    nullable: true
+  surprisePct:
+    type: double
+    nullable: true
+  market:
+    type: string
+    enum: [KR, US]

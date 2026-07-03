@@ -1,0 +1,45 @@
+apiName: FactorExposure
+displayName: 팩터 익스포저
+description: 종목의 팩터 베타 (롤링 OLS 산출). 파이프라인이 매일 갱신.
+icon: git-branch
+color: block-lilac
+status: ACTIVE
+primaryKey: exposureId
+titleProperty: exposureId
+properties:
+  exposureId:
+    type: string
+    description: "{instrumentId}:{factorId}"
+  instrumentId:
+    type: string
+  factorId:
+    type: string
+  beta:
+    type: double
+    owner: PIPELINE
+  tStat:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  stderr:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  r2:
+    type: double
+    nullable: true
+    owner: PIPELINE
+    description: "해당 회귀 그룹 전체의 R² (종목×그룹 단위)"
+  window:
+    type: integer
+    owner: PIPELINE
+  asOfDate:
+    type: date
+    owner: PIPELINE
+  modelVersionId:
+    type: string
+    owner: PIPELINE
+  stale:
+    type: boolean
+    nullable: true
+    owner: PIPELINE

@@ -1,0 +1,53 @@
+apiName: Instrument
+displayName: 종목
+displayNamePlural: 종목
+description: 거래 가능한 주식/ETF. 온톨로지 그래프의 중심 노드.
+icon: chart-line
+color: block-mint
+status: ACTIVE
+primaryKey: instrumentId
+titleProperty: name
+properties:
+  instrumentId:
+    type: string
+    description: "예: KRX:005930, XNAS:AAPL"
+  ticker:
+    type: string
+    description: "거래소 티커. 예: 005930, AAPL"
+  name:
+    type: string
+  nameKo:
+    type: string
+    nullable: true
+  market:
+    type: string
+    enum: [KRX, KOSDAQ, XNAS, XNYS, ARCA]
+  currency:
+    type: string
+    enum: [KRW, USD]
+  assetClass:
+    type: string
+    enum: [EQUITY, ETF]
+  sector:
+    type: string
+    nullable: true
+  dartCorpCode:
+    type: string
+    nullable: true
+    description: "DART 고유번호(8자리). KR 전용, corpCode.xml에서 해석"
+  secCik:
+    type: string
+    nullable: true
+    description: "SEC CIK (zero-padded 10자리). US 전용"
+  priceSource:
+    type: string
+    enum: [NAVER, TIINGO, YFINANCE]
+timeSeriesProperties:
+  price:
+    frequency: daily
+    unit: currency
+    storage: "data/source/prices/{pk}.parquet"
+  return:
+    frequency: daily
+    unit: ratio
+    derived: true

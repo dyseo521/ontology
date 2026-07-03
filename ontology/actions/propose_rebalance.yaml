@@ -1,0 +1,61 @@
+# Action Type: 리밸런싱 제안 생성 — 백테스트 검증 후 PENDING 전환
+apiName: proposeRebalance
+displayName: 리밸런싱 제안 생성
+description: legs(매수/매도/보유)로 구성된 제안을 DRAFT로 생성하고 백테스트 검증을 실행한다.
+parameters:
+  portfolioId:
+    type: objectRef
+    objectType: Portfolio
+    bind: portfolio
+    required: true
+    default: main
+  title:
+    type: string
+    required: true
+  legs:
+    type: array
+    required: true
+    description: "[{instrumentId, side, targetWeightDelta, reason?}]"
+  rationale:
+    type: string
+    required: true
+    minLength: 20
+  strategyRule:
+    type: json
+    required: false
+    description: "백테스트 재현용 규칙 파라미터. 없으면 legs 기반 단순 검증"
+  insightIds:
+    type: array
+    required: false
+submissionCriteria:
+  - condition: "len(params.legs) > 0"
+    failureMessage: "최소 1개의 leg가 필요합니다."
+  - condition: "all_instruments_exist(params.legs)"
+    failureMessage: "legs에 유니버스에 없는 종목이 포함되어 있습니다."
+  - condition: "abs_weight_delta_sum(params.legs) <= 0.5"
+    failureMessage: "한 번의 제안에서 총 비중 변화 절대값 합이 50%p를 넘을 수 없습니다."
+rules:
+  - type: createObject
+    objectType: RebalanceProposal
+    values:
+      proposalId: "$generateId(prop)"
+      title: "$param.title"
+      status: DRAFT
+      legs: "$param.legs"
+      rationale: "$param.rationale"
+      strategyRule: "$param.strategyRule"
+      createdAt: "$now"
+      createdBy: "$actor"
+      asOfDate: "$today"
+  - type: createLink
+    linkType: proposalFromInsight
+    from: "$created.RebalanceProposal"
+    toEach: "$param.insightIds"
+  - type: functionRule
+    function: validate_proposal_backtest
+    description: "vectorbt walk-forward 실행 → EvaluationRun 생성 → 게이트 통과 시 status=PENDING"
+sideEffects:
+  - type: auditLog
+  - type: notification
+    channel: dashboard-feed
+    template: "새 리밸런싱 제안: {params.title}"

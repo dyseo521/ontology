@@ -1,0 +1,27 @@
+# Action Type: 인사이트 서사 편집 — MCP에서 Claude가 RAG 기반으로 다듬은 서사를 writeback
+apiName: editInsightNarrative
+displayName: 인사이트 서사 편집
+description: 인사이트의 narrative를 갱신한다. 검증 상태/메트릭은 변경 불가.
+parameters:
+  insightId:
+    type: objectRef
+    objectType: Insight
+    bind: insight
+    required: true
+  narrative:
+    type: string
+    required: true
+    minLength: 20
+submissionCriteria:
+  - condition: "insight != None"
+    failureMessage: "존재하지 않는 인사이트입니다."
+  - condition: "insight.validationStatus != 'REJECTED'"
+    failureMessage: "REJECTED 인사이트의 서사는 편집할 수 없습니다 (노출 억제 대상)."
+rules:
+  - type: modifyObject
+    objectType: Insight
+    target: "$param.insightId"
+    set:
+      narrative: "$param.narrative"
+sideEffects:
+  - type: auditLog

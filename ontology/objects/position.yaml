@@ -1,0 +1,48 @@
+apiName: Position
+displayName: 포지션
+description: 포트폴리오 내 단일 종목 보유. quantity는 사용자(writeback) 소유, 평가치는 파이프라인 소유.
+icon: layers
+color: block-cream
+status: ACTIVE
+primaryKey: positionId
+titleProperty: positionId
+properties:
+  positionId:
+    type: string
+    description: "{portfolioId}:{instrumentId}"
+  portfolioId:
+    type: string
+  instrumentId:
+    type: string
+  quantity:
+    type: double
+    owner: USER
+  avgCostLocal:
+    type: double
+    owner: USER
+    description: "종목 통화 기준 평균 취득단가"
+  openedAt:
+    type: date
+    nullable: true
+    owner: USER
+  lastPriceLocal:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  marketValueBase:
+    type: double
+    nullable: true
+    owner: PIPELINE
+    description: "포트폴리오 기준통화 평가액"
+  weight:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  dailyPnlBase:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  unrealizedPnlPct:
+    type: double
+    nullable: true
+    owner: PIPELINE

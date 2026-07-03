@@ -1,0 +1,15 @@
+{"positionId":"main:ARCA:SPY","portfolioId":"main","instrumentId":"ARCA:SPY","lastPriceLocal":744.78,"marketValueBase":21037029.66,"weight":0.07118,"dailyPnlBase":0.0,"unrealizedPnlPct":0.426782}
+{"positionId":"main:KRX:000660","portfolioId":"main","instrumentId":"KRX:000660","lastPriceLocal":2283000.0,"marketValueBase":59358000.0,"weight":0.200841,"dailyPnlBase":2496000.0,"unrealizedPnlPct":11.825843}
+{"positionId":"main:KRX:005380","portfolioId":"main","instrumentId":"KRX:005380","lastPriceLocal":482500.0,"marketValueBase":14475000.0,"weight":0.048977,"dailyPnlBase":15000.0,"unrealizedPnlPct":1.079741}
+{"positionId":"main:KRX:005930","portfolioId":"main","instrumentId":"KRX:005930","lastPriceLocal":304500.0,"marketValueBase":59073000.0,"weight":0.199877,"dailyPnlBase":3589000.0,"unrealizedPnlPct":3.229167}
+{"positionId":"main:KRX:035420","portfolioId":"main","instrumentId":"KRX:035420","lastPriceLocal":194200.0,"marketValueBase":7768000.0,"weight":0.026283,"dailyPnlBase":-228000.0,"unrealizedPnlPct":-0.009184}
+{"positionId":"main:KRX:035720","portfolioId":"main","instrumentId":"KRX:035720","lastPriceLocal":34950.0,"marketValueBase":3495000.0,"weight":0.011826,"dailyPnlBase":-30000.0,"unrealizedPnlPct":-0.264211}
+{"positionId":"main:KRX:068270","portfolioId":"main","instrumentId":"KRX:068270","lastPriceLocal":183100.0,"marketValueBase":5493000.0,"weight":0.018586,"dailyPnlBase":195000.0,"unrealizedPnlPct":0.040341}
+{"positionId":"main:KRX:069500","portfolioId":"main","instrumentId":"KRX:069500","lastPriceLocal":126870.0,"marketValueBase":57598980.0,"weight":0.19489,"dailyPnlBase":1516360.0,"unrealizedPnlPct":2.543855}
+{"positionId":"main:XNAS:AAPL","portfolioId":"main","instrumentId":"XNAS:AAPL","lastPriceLocal":308.63,"marketValueBase":14197967.62,"weight":0.04804,"dailyPnlBase":0.0,"unrealizedPnlPct":0.654853}
+{"positionId":"main:XNAS:GOOGL","portfolioId":"main","instrumentId":"XNAS:GOOGL","lastPriceLocal":359.91,"marketValueBase":11038007.81,"weight":0.037348,"dailyPnlBase":0.0,"unrealizedPnlPct":1.235466}
+{"positionId":"main:XNAS:MSFT","portfolioId":"main","instrumentId":"XNAS:MSFT","lastPriceLocal":390.49,"marketValueBase":8981894.78,"weight":0.030391,"dailyPnlBase":0.0,"unrealizedPnlPct":-0.003852}
+{"positionId":"main:XNAS:NVDA","portfolioId":"main","instrumentId":"XNAS:NVDA","lastPriceLocal":194.83,"marketValueBase":7170242.76,"weight":0.024261,"dailyPnlBase":0.0,"unrealizedPnlPct":0.709035}
+{"positionId":"main:XNAS:QQQ","portfolioId":"main","instrumentId":"XNAS:QQQ","lastPriceLocal":712.6,"marketValueBase":10927293.44,"weight":0.036973,"dailyPnlBase":0.0,"unrealizedPnlPct":0.590625}
+{"positionId":"main:XNAS:TSLA","portfolioId":"main","instrumentId":"XNAS:TSLA","lastPriceLocal":393.45,"marketValueBase":7239983.62,"weight":0.024497,"dailyPnlBase":0.0,"unrealizedPnlPct":0.725658}
+{"positionId":"main:XNYS:JPM","portfolioId":"main","instrumentId":"XNYS:JPM","lastPriceLocal":334.47,"marketValueBase":7693345.15,"weight":0.026031,"dailyPnlBase":0.0,"unrealizedPnlPct":0.693519}

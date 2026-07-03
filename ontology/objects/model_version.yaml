@@ -1,0 +1,28 @@
+apiName: ModelVersion
+displayName: 모델 버전
+description: Modeling Objective 패턴. 팩터모델/이벤트분류기/리밸런싱전략의 버전과 스테이지.
+icon: package
+color: surface-soft
+status: ACTIVE
+primaryKey: modelVersionId
+titleProperty: modelVersionId
+properties:
+  modelVersionId:
+    type: string
+    description: "{modelId}@{semver}. 예: factor-model@1.0.0"
+  modelId:
+    type: string
+    enum: [factor-model, event-classifier, rebalance-strategy]
+  version:
+    type: string
+  stage:
+    type: string
+    enum: [STAGING, PRODUCTION, ARCHIVED]
+  params:
+    type: json
+    nullable: true
+  description:
+    type: string
+    nullable: true
+  createdAt:
+    type: timestamp

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ontoquant": {
+      "command": ".venv/bin/python",
+      "args": ["-m", "onto_mcp.server"]
+    }
+  }
+}

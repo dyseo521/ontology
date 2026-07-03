@@ -1,0 +1,39 @@
+# Action Type: 리스크 한도 설정
+apiName: setRiskLimit
+displayName: 리스크 한도 설정
+description: 포트폴리오 리스크 한도(riskLimits)를 변경한다.
+parameters:
+  portfolioId:
+    type: objectRef
+    objectType: Portfolio
+    bind: portfolio
+    required: true
+    default: main
+  maxWeightPerName:
+    type: double
+    required: false
+  maxVar95:
+    type: double
+    required: false
+  maxSectorWeight:
+    type: double
+    required: false
+  reason:
+    type: string
+    required: true
+submissionCriteria:
+  - condition: "params.maxWeightPerName == None or (params.maxWeightPerName > 0 and params.maxWeightPerName <= 1)"
+    failureMessage: "maxWeightPerName은 (0, 1] 범위여야 합니다."
+  - condition: "params.maxVar95 == None or (params.maxVar95 > 0 and params.maxVar95 <= 0.5)"
+    failureMessage: "maxVar95는 (0, 0.5] 범위여야 합니다."
+  - condition: "params.maxWeightPerName != None or params.maxVar95 != None or params.maxSectorWeight != None"
+    failureMessage: "변경할 한도를 하나 이상 지정하세요."
+rules:
+  - type: functionRule
+    function: apply_risk_limit_edit
+    description: "portfolio.json riskLimits writeback"
+sideEffects:
+  - type: auditLog
+  - type: notification
+    channel: dashboard-feed
+    template: "리스크 한도 변경 ({params.reason})"

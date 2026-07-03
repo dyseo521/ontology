@@ -1,0 +1,29 @@
+apiName: Decision
+displayName: 결정
+description: 사람이 내린 결정의 캡처 (추천 스냅샷 + 근거 + 결정). append-only, writeback 계층.
+icon: check-circle
+color: block-navy
+status: ACTIVE
+primaryKey: decisionId
+titleProperty: decisionId
+properties:
+  decisionId:
+    type: string
+  subjectType:
+    type: string
+    description: "결정 대상 오브젝트 타입 (예: RebalanceProposal)"
+  subjectId:
+    type: string
+  decidedBy:
+    type: string
+  decidedAt:
+    type: timestamp
+  decision:
+    type: string
+    enum: [APPROVE, REJECT, MODIFY]
+  reason:
+    type: string
+  recommendationSnapshot:
+    type: json
+    nullable: true
+    description: "결정 시점의 추천값+근거+검증 메트릭 스냅샷 (decision lineage)"

@@ -1,0 +1,34 @@
+apiName: RiskMetric
+displayName: 리스크 지표
+description: 포트폴리오/포지션 스코프의 리스크 측정치. 최신 asOf만 오브젝트로 유지, 시계열은 export로.
+icon: shield
+color: surface-soft
+status: ACTIVE
+primaryKey: metricId
+titleProperty: metricId
+properties:
+  metricId:
+    type: string
+    description: "{scopeType}:{scopeId}:{metricType}"
+  scopeType:
+    type: string
+    enum: [PORTFOLIO, POSITION]
+  scopeId:
+    type: string
+  metricType:
+    type: string
+    enum: [VAR_95_1D, VOL_30D, BETA_MKT, MDD_1Y, HHI, CONTRIB_VAR]
+  value:
+    type: double
+    owner: PIPELINE
+  asOfDate:
+    type: date
+    owner: PIPELINE
+  limitBreached:
+    type: boolean
+    nullable: true
+    owner: PIPELINE
+  limitValue:
+    type: double
+    nullable: true
+    owner: PIPELINE

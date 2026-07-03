@@ -1,0 +1,318 @@
+{
+  "objectTypes": [
+    {
+      "apiName": "Decision",
+      "displayName": "결정",
+      "description": "사람이 내린 결정의 캡처 (추천 스냅샷 + 근거 + 결정). append-only, writeback 계층.",
+      "icon": "check-circle",
+      "color": "block-navy",
+      "status": "ACTIVE",
+      "primaryKey": "decisionId",
+      "titleProperty": "decisionId",
+      "implements": []
+    },
+    {
+      "apiName": "DisclosureEvent",
+      "displayName": "공시 이벤트",
+      "description": "DART/SEC 공시. Event 인터페이스 구현.",
+      "icon": "file-text",
+      "color": "block-pink",
+      "status": "ACTIVE",
+      "primaryKey": "eventId",
+      "titleProperty": "title",
+      "implements": [
+        "Event"
+      ]
+    },
+    {
+      "apiName": "EarningsEvent",
+      "displayName": "실적 이벤트",
+      "description": "실적 발표 (DART 실적공시 / 8-K item 2.02). Event 인터페이스 구현.",
+      "icon": "bar-chart",
+      "color": "block-pink",
+      "status": "ACTIVE",
+      "primaryKey": "eventId",
+      "titleProperty": "title",
+      "implements": [
+        "Event"
+      ]
+    },
+    {
+      "apiName": "EvaluationRun",
+      "displayName": "평가 실행",
+      "description": "MetricSet 패턴 — 모델 버전 + 데이터 범위에 바인딩된 평가 결과와 게이트 판정.",
+      "icon": "clipboard-check",
+      "color": "surface-soft",
+      "status": "ACTIVE",
+      "primaryKey": "runId",
+      "titleProperty": "runId",
+      "implements": []
+    },
+    {
+      "apiName": "Factor",
+      "displayName": "팩터",
+      "description": "리스크 팩터 (스타일/시장/매크로). 시계열은 data/source/factors/에 저장.",
+      "icon": "trending-up",
+      "color": "block-lilac",
+      "status": "ACTIVE",
+      "primaryKey": "factorId",
+      "titleProperty": "name",
+      "implements": []
+    },
+    {
+      "apiName": "FactorExposure",
+      "displayName": "팩터 익스포저",
+      "description": "종목의 팩터 베타 (롤링 OLS 산출). 파이프라인이 매일 갱신.",
+      "icon": "git-branch",
+      "color": "block-lilac",
+      "status": "ACTIVE",
+      "primaryKey": "exposureId",
+      "titleProperty": "exposureId",
+      "implements": []
+    },
+    {
+      "apiName": "Insight",
+      "displayName": "인사이트",
+      "description": "이벤트/리스크에서 도출된 해석. 이벤트 스터디로 검증되어야 VALIDATED.",
+      "icon": "lightbulb",
+      "color": "block-lime",
+      "status": "ACTIVE",
+      "primaryKey": "insightId",
+      "titleProperty": "title",
+      "implements": []
+    },
+    {
+      "apiName": "Instrument",
+      "displayName": "종목",
+      "description": "거래 가능한 주식/ETF. 온톨로지 그래프의 중심 노드.",
+      "icon": "chart-line",
+      "color": "block-mint",
+      "status": "ACTIVE",
+      "primaryKey": "instrumentId",
+      "titleProperty": "name",
+      "implements": []
+    },
+    {
+      "apiName": "MacroEvent",
+      "displayName": "매크로 이벤트",
+      "description": "FRED 시리즈 급변동 (|z|>=2, 252d). Event 인터페이스 구현.",
+      "icon": "globe",
+      "color": "block-pink",
+      "status": "ACTIVE",
+      "primaryKey": "eventId",
+      "titleProperty": "title",
+      "implements": [
+        "Event"
+      ]
+    },
+    {
+      "apiName": "ModelVersion",
+      "displayName": "모델 버전",
+      "description": "Modeling Objective 패턴. 팩터모델/이벤트분류기/리밸런싱전략의 버전과 스테이지.",
+      "icon": "package",
+      "color": "surface-soft",
+      "status": "ACTIVE",
+      "primaryKey": "modelVersionId",
+      "titleProperty": "modelVersionId",
+      "implements": []
+    },
+    {
+      "apiName": "NewsEvent",
+      "displayName": "뉴스 이벤트",
+      "description": "RSS 뉴스 (Yahoo per-ticker / DART todayRSS). Event 인터페이스 구현.",
+      "icon": "rss",
+      "color": "block-pink",
+      "status": "ACTIVE",
+      "primaryKey": "eventId",
+      "titleProperty": "title",
+      "implements": [
+        "Event"
+      ]
+    },
+    {
+      "apiName": "Portfolio",
+      "displayName": "포트폴리오",
+      "description": "사용자 포트폴리오. writeback 계층(portfolio.json)이 정본.",
+      "icon": "briefcase",
+      "color": "block-navy",
+      "status": "ACTIVE",
+      "primaryKey": "portfolioId",
+      "titleProperty": "name",
+      "implements": []
+    },
+    {
+      "apiName": "Position",
+      "displayName": "포지션",
+      "description": "포트폴리오 내 단일 종목 보유. quantity는 사용자(writeback) 소유, 평가치는 파이프라인 소유.",
+      "icon": "layers",
+      "color": "block-cream",
+      "status": "ACTIVE",
+      "primaryKey": "positionId",
+      "titleProperty": "positionId",
+      "implements": []
+    },
+    {
+      "apiName": "RebalanceProposal",
+      "displayName": "리밸런싱 제안",
+      "description": "매수/매도/보유 제안. ProposedAction 인터페이스 구현. 백테스트 게이트 통과 후 승인 가능.",
+      "icon": "shuffle",
+      "color": "block-coral",
+      "status": "ACTIVE",
+      "primaryKey": "proposalId",
+      "titleProperty": "title",
+      "implements": [
+        "ProposedAction"
+      ]
+    },
+    {
+      "apiName": "RiskMetric",
+      "displayName": "리스크 지표",
+      "description": "포트폴리오/포지션 스코프의 리스크 측정치. 최신 asOf만 오브젝트로 유지, 시계열은 export로.",
+      "icon": "shield",
+      "color": "surface-soft",
+      "status": "ACTIVE",
+      "primaryKey": "metricId",
+      "titleProperty": "metricId",
+      "implements": []
+    },
+    {
+      "apiName": "Scenario",
+      "displayName": "시나리오",
+      "description": "온톨로지 fork/sandbox. 액션을 오버레이에 적용해 what-if 분석, commit 또는 discard.",
+      "icon": "git-branch",
+      "color": "block-cream",
+      "status": "ACTIVE",
+      "primaryKey": "scenarioId",
+      "titleProperty": "name",
+      "implements": []
+    }
+  ],
+  "interfaces": [
+    {
+      "apiName": "Event",
+      "displayName": "이벤트",
+      "color": "block-pink",
+      "implementedBy": [
+        "DisclosureEvent",
+        "EarningsEvent",
+        "MacroEvent",
+        "NewsEvent"
+      ]
+    },
+    {
+      "apiName": "ProposedAction",
+      "displayName": "제안된 액션",
+      "color": "block-coral",
+      "implementedBy": [
+        "RebalanceProposal"
+      ]
+    }
+  ],
+  "linkTypes": [
+    {
+      "apiName": "decisionOnProposal",
+      "displayName": "결재 대상",
+      "from": "Decision",
+      "to": "RebalanceProposal",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "eventAffectsInstrument",
+      "displayName": "이벤트→종목 영향",
+      "from": "Event",
+      "to": "Instrument",
+      "cardinality": "MANY_TO_MANY"
+    },
+    {
+      "apiName": "eventDrivesFactor",
+      "displayName": "이벤트→팩터 영향",
+      "from": "Event",
+      "to": "Factor",
+      "cardinality": "MANY_TO_MANY"
+    },
+    {
+      "apiName": "exposureFactor",
+      "displayName": "대상 팩터",
+      "from": "FactorExposure",
+      "to": "Factor",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "insightAboutInstrument",
+      "displayName": "관련 종목",
+      "from": "Insight",
+      "to": "Instrument",
+      "cardinality": "MANY_TO_MANY"
+    },
+    {
+      "apiName": "insightFromEvent",
+      "displayName": "근거 이벤트",
+      "from": "Insight",
+      "to": "Event",
+      "cardinality": "MANY_TO_MANY"
+    },
+    {
+      "apiName": "instrumentExposures",
+      "displayName": "팩터 익스포저",
+      "from": "Instrument",
+      "to": "FactorExposure",
+      "cardinality": "ONE_TO_MANY"
+    },
+    {
+      "apiName": "metricScopePortfolio",
+      "displayName": "지표 스코프(포트폴리오)",
+      "from": "RiskMetric",
+      "to": "Portfolio",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "metricScopePosition",
+      "displayName": "지표 스코프(포지션)",
+      "from": "RiskMetric",
+      "to": "Position",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "modelEvaluations",
+      "displayName": "평가 이력",
+      "from": "ModelVersion",
+      "to": "EvaluationRun",
+      "cardinality": "ONE_TO_MANY"
+    },
+    {
+      "apiName": "portfolioPositions",
+      "displayName": "보유 포지션",
+      "from": "Portfolio",
+      "to": "Position",
+      "cardinality": "ONE_TO_MANY"
+    },
+    {
+      "apiName": "positionInstrument",
+      "displayName": "대상 종목",
+      "from": "Position",
+      "to": "Instrument",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "proposalFromInsight",
+      "displayName": "근거 인사이트",
+      "from": "RebalanceProposal",
+      "to": "Insight",
+      "cardinality": "MANY_TO_MANY"
+    },
+    {
+      "apiName": "proposalValidatedBy",
+      "displayName": "검증 실행",
+      "from": "RebalanceProposal",
+      "to": "EvaluationRun",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "similarEvent",
+      "displayName": "유사 이벤트",
+      "from": "Event",
+      "to": "Event",
+      "cardinality": "MANY_TO_MANY"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "metrics": {
+    "VAR_95_1D": {
+      "base": 0.032676,
+      "scenario": 0.032903,
+      "delta": 0.000227
+    },
+    "VOL_30D": {
+      "base": 0.585553,
+      "scenario": 0.590149,
+      "delta": 0.004596
+    },
+    "MDD_1Y": {
+      "base": 0.158468,
+      "scenario": 0.160708,
+      "delta": 0.00224
+    },
+    "HHI": {
+      "base": 0.134771,
+      "scenario": 0.137649,
+      "delta": 0.002878
+    }
+  },
+  "positions": {
+    "added": [],
+    "removed": [],
+    "changed": [
+      {
+        "positionId": "main:XNAS:NVDA",
+        "field": "quantity",
+        "base": 24.0,
+        "scenario": 12.0
+      }
+    ]
+  },
+  "exposures": {
+    "KRX:000660": {
+      "base": 0.2008,
+      "scenario": 0.2033,
+      "delta": 0.0025
+    },
+    "KRX:005930": {
+      "base": 0.1999,
+      "scenario": 0.2023,
+      "delta": 0.0025
+    },
+    "KRX:069500": {
+      "base": 0.1949,
+      "scenario": 0.1973,
+      "delta": 0.0024
+    },
+    "XNAS:NVDA": {
+      "base": 0.0243,
+      "scenario": 0.0123,
+      "delta": -0.012
+    }
+  }
+}

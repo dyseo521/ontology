@@ -1,0 +1,57 @@
+# Action Type: 제안 결재 — decision capture의 핵심 액션
+apiName: approveProposal
+displayName: 리밸런싱 제안 결재
+description: PENDING 제안을 승인/반려한다. 승인 시 portfolio.json에 반영(writeback).
+parameters:
+  proposalId:
+    type: objectRef
+    objectType: RebalanceProposal
+    bind: proposal
+    required: true
+  decision:
+    type: string
+    enum: [APPROVE, REJECT]
+    required: true
+  reason:
+    type: string
+    required: true
+    minLength: 10
+submissionCriteria:
+  - condition: "proposal.status == 'PENDING'"
+    failureMessage: "PENDING 상태의 제안만 결재할 수 있습니다."
+  - condition: "params.decision == 'REJECT' or proposal.backtestRunId != None"
+    failureMessage: "백테스트 검증이 실행되지 않은 제안은 승인할 수 없습니다."
+  - condition: "params.decision == 'REJECT' or evaluation_passed(proposal.backtestRunId)"
+    failureMessage: "백테스트 검증 게이트를 통과하지 않은 제안입니다."
+  - condition: "params.decision == 'REJECT' or not would_breach_limits(proposal)"
+    failureMessage: "적용 시 포트폴리오 리스크 한도를 위반합니다."
+rules:
+  - type: modifyObject
+    objectType: RebalanceProposal
+    target: "$param.proposalId"
+    set:
+      status: "$expr(params.decision == 'APPROVE' and 'APPROVED' or 'REJECTED')"
+  - type: createObject
+    objectType: Decision
+    values:
+      decisionId: "$generateId(dec)"
+      subjectType: RebalanceProposal
+      subjectId: "$param.proposalId"
+      decidedBy: "$actor"
+      decidedAt: "$now"
+      decision: "$param.decision"
+      reason: "$param.reason"
+      recommendationSnapshot: "$snapshot(proposal)"
+  - type: createLink
+    linkType: decisionOnProposal
+    from: "$created.Decision"
+    to: "$param.proposalId"
+  - type: functionRule
+    function: apply_proposal_to_portfolio
+    when: "params.decision == 'APPROVE'"
+    description: "legs를 portfolio.json 수량으로 환산해 writeback, 제안 status=EXECUTED"
+sideEffects:
+  - type: auditLog
+  - type: notification
+    channel: dashboard-feed
+    template: "제안 {proposal.title} → {params.decision} ({params.reason})"
