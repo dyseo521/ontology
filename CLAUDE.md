@@ -52,6 +52,8 @@ cd dashboard && npm run build                        # 정적 빌드 (out/)
 - 브라우저 자동화(claude-in-chrome)는 토큰 소모가 크므로 최종 확인 1회만.
   평소엔 빌드 산출물(dashboard/out)을 grep/node 로 검사한다.
 - 교훈은 notes/ 에 기록 (기존 노트 갱신 우선, 틀린 노트는 삭제).
+- 저장소는 **공개 유지** (사용자 결정, 2026-07-03). notes/ 는 그래서 git 미추적
+  로컬 전용이다 — 공개 레포에 올리지 말 것.
 - 커밋 정체성: dyseo521 <dyseo521@gmail.com>.
 
 ## 함정 (notes/ 상세)
