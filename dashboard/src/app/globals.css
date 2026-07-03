@@ -39,7 +39,7 @@ html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 body {
   background: var(--canvas);
   color: var(--ink);
-  font-family: var(--font-sans), "SF Pro Display", system-ui, helvetica, sans-serif;
+  font-family: var(--font-sans), var(--font-kr), "SF Pro Display", system-ui, helvetica, sans-serif;
   font-size: 18px;
   font-weight: 320;
   line-height: 1.45;
@@ -68,17 +68,17 @@ ul, ol { list-style: none; }
 .link-strong { font-weight: 480; letter-spacing: -0.1px; }
 
 .eyebrow {
-  font-family: var(--font-mono), "SF Mono", menlo, monospace;
+  font-family: var(--font-mono), var(--font-kr), "SF Mono", menlo, monospace;
   font-size: 15px; font-weight: 400; line-height: 1.3;
   letter-spacing: 0.54px; text-transform: uppercase;
 }
 .caption {
-  font-family: var(--font-mono), "SF Mono", menlo, monospace;
+  font-family: var(--font-mono), var(--font-kr), "SF Mono", menlo, monospace;
   font-size: 12px; font-weight: 400; line-height: 1.4; letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 .mono-num {
-  font-family: var(--font-mono), "SF Mono", menlo, monospace;
+  font-family: var(--font-mono), var(--font-kr), "SF Mono", menlo, monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
 }
@@ -178,7 +178,7 @@ ul, ol { list-style: none; }
 /* ── 테이블 ─────────────────────────────────────────────────── */
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table th {
-  font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 400;
+  font-family: var(--font-mono), var(--font-kr), monospace; font-size: 12px; font-weight: 400;
   letter-spacing: 0.6px; text-transform: uppercase; text-align: left;
   padding: 10px 12px; border-bottom: 1px solid var(--hairline);
 }
@@ -194,7 +194,7 @@ ul, ol { list-style: none; }
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
   border-radius: var(--r-full); padding: 3px 12px;
-  font-family: var(--font-mono), monospace; font-size: 11.5px;
+  font-family: var(--font-mono), var(--font-kr), monospace; font-size: 11.5px;
   letter-spacing: 0.5px; text-transform: uppercase;
 }
 .badge--validated { background: var(--semantic-success); color: #fff; }

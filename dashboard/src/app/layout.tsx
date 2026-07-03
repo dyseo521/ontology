@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import TopNav from "@/components/TopNav";
 import { loadMeta } from "@/lib/data";
 import { fmtDateTime } from "@/lib/format";
 
-const sans = Inter({ subsets: ["latin"], variable: "--font-sans", axes: ["opsz"] });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const sans = Inter({ subsets: ["latin"], variable: "--font-sans", axes: ["opsz"], display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+// 한글 글리프: Inter/JetBrains Mono 에 없음 — 셀프호스팅 Noto Sans KR 로 보장
+// (unicode-range 분할로 실제 쓰인 조각만 로드됨. preload 는 라틴만)
+const kr = Noto_Sans_KR({ subsets: ["latin"], variable: "--font-kr", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   title: "OntoQuant · 내 포트폴리오에 닿는 모든 신호",
@@ -24,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const ticker = [...sourceNames, `AS OF ${meta.asOf ?? "-"}`, `GENERATED ${fmtDateTime(meta.generatedAt)} UTC`];
 
   return (
-    <html lang="ko" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="ko" className={`${sans.variable} ${mono.variable} ${kr.variable}`}>
       <body>
         <a href="#main" className="skip-link">본문으로 건너뛰기</a>
         <TopNav />

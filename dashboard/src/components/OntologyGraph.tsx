@@ -93,7 +93,7 @@ export default function OntologyGraph({
             color: "data(fg)",
             label: "data(label)",
             "font-size": 11,
-            "font-family": "var(--font-sans), sans-serif",
+            "font-family": "var(--font-sans), var(--font-kr), sans-serif",
             "text-valign": "center",
             "text-halign": "center",
             "text-wrap": "wrap",
