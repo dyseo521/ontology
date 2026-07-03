@@ -115,6 +115,7 @@ class ActionEngine:
             "evaluation_passed": lambda run_id: af.evaluation_passed(self.store, run_id),
             "would_breach_limits": lambda proposal: af.would_breach_limits(self.store, proposal),
             "passed_eval_count": lambda mv_id: af.passed_eval_count_helper(self.store, mv_id),
+            "passed_wf_count": lambda model_id: af.passed_wf_count_helper(self.store, model_id),
             "all_instruments_exist": lambda legs: af.all_instruments_exist(self.store, legs),
             "abs_weight_delta_sum": af.abs_weight_delta_sum,
         }
@@ -155,6 +156,10 @@ class ActionEngine:
                     if run:
                         snap["backtestMetrics"] = run.get("metricSet")
                         snap["backtestPassedGates"] = run.get("passedGates")
+                # 결정 시점의 사전 비중 (DECISION_OUTCOME 반사실 재구성용)
+                snap["preTradeWeights"] = {
+                    p["instrumentId"]: float(p.get("weight") or 0)
+                    for p in self.store.query("Position")}
                 return snap
             if v.startswith("$expr(") and v.endswith(")"):
                 return self._eval(v[len("$expr("):-1], ctx)

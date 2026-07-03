@@ -27,4 +27,8 @@ sharedProperties:
     type: string
     nullable: true
     description: "data/embeddings/index 내 행 ID"
+  severityBasis:
+    type: json
+    nullable: true
+    description: "심각도 산출 근거 (base, PIT CAR 통계 시점) — 소급 수정 금지 감사 필드"
 implementedBy: [DisclosureEvent, EarningsEvent, MacroEvent, NewsEvent]

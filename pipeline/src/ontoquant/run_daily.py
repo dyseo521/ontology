@@ -96,13 +96,12 @@ def stage_insights(statuses: dict) -> None:
 
 
 def stage_proposals(statuses: dict) -> None:
-    try:
-        from ontoquant.proposals import rebalance
-    except ImportError:
-        statuses["proposals"] = {"status": "not-implemented (Phase 4)"}
-        return
+    from ontoquant.proposals import outcomes, rebalance
+
     store = OntologyStore().build()
     statuses["proposals"] = rebalance.run(store)
+    store = OntologyStore().build()
+    statuses["decision_outcomes"] = outcomes.run(store)
 
 
 def stage_export(statuses: dict) -> None:

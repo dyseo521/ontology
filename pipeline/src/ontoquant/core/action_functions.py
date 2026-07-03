@@ -27,6 +27,11 @@ def passed_eval_count_helper(store: OntologyStore, mv_id) -> int:
     return passed_eval_count(store, mv_id)
 
 
+def passed_wf_count_helper(store: OntologyStore, model_id) -> int:
+    from ontoquant.modeling.objective import passed_wf_count
+    return passed_wf_count(store, model_id)
+
+
 def all_instruments_exist(store: OntologyStore, legs) -> bool:
     legs = legs or []
     return all(store.get("Instrument", l.get("instrumentId")) is not None for l in legs)

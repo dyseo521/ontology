@@ -58,3 +58,40 @@ def record_evaluation(
 def passed_eval_count(store: OntologyStore, model_version_id: str) -> int:
     return len(store.query("EvaluationRun",
                            where={"modelVersionId": model_version_id, "passedGates": True}))
+
+
+def rule_hash(rule: dict | None) -> str:
+    """전략 규칙의 canonical hash — 시도 장부의 키 (지울 수 없는 다중 시도 카운팅)."""
+    import hashlib
+    import json
+    canonical = json.dumps(rule or {}, sort_keys=True, ensure_ascii=False, default=str)
+    return hashlib.sha1(canonical.encode()).hexdigest()[:10]
+
+
+def count_trials(store: OntologyStore, model_id: str = "rebalance-strategy",
+                 ) -> tuple[int, list[float]]:
+    """이력상 서로 다른 ruleHash 시도 수 + 각 시도의 per-period Sharpe 목록.
+
+    EvaluationRun 이 append-only 이므로 시도를 지우거나 빼먹을 수 없다
+    (Harvey-Liu-Zhu: 발견의 유의성은 시도 수만큼 할인).
+    """
+    seen: dict[str, float | None] = {}
+    for r in store.query("EvaluationRun"):
+        ms = r.get("metricSet") or {}
+        rh = ms.get("ruleHash")
+        if not rh or not str(r.get("modelVersionId", "")).startswith(model_id):
+            continue
+        sr = ms.get("oosSharpe") if "oosSharpe" in ms else ms.get("sharpe")
+        if rh not in seen:
+            seen[rh] = (sr / (252 ** 0.5)) if isinstance(sr, (int, float)) else None
+    srs = [v for v in seen.values() if v is not None]
+    return len(seen), srs
+
+
+def passed_wf_count(store: OntologyStore, model_id: str) -> int:
+    """게이트를 통과한 WALK_FORWARD run 수 (전략 승격 요건)."""
+    return len([
+        r for r in store.query("EvaluationRun", where={"runType": "WALK_FORWARD",
+                                                       "passedGates": True})
+        if str(r.get("modelVersionId", "")).startswith(model_id)
+    ])

@@ -112,8 +112,14 @@ def _link_macro_sectors(store: OntologyStore) -> int:
 
 
 def enrich_events(store: OntologyStore) -> dict:
-    """신규 이벤트 보강: 임베딩 → dedupe → 감성(뉴스) → 분류 → 심각도 → 섹터 링크."""
+    """신규 이벤트 보강: 임베딩 → dedupe → 감성(뉴스) → 분류 → 심각도(PIT) → 섹터 링크."""
     from ontoquant.events import sentiment as senti
+    from ontoquant.insights import event_study
+
+    try:
+        cars_ledger = event_study.compute_event_cars(store)
+    except Exception:  # noqa: BLE001 — 원장 갱신 실패는 base severity 로 진행
+        cars_ledger = event_study.load_cars()
 
     event_types = store.schema.interfaces["Event"].implementedBy
     todo: list[tuple[str, dict]] = []
@@ -192,12 +198,24 @@ def enrich_events(store: OntologyStore) -> dict:
             score, label = sentiments[e["eventId"]]
             updates["sentiment"] = score
             updates["sentimentLabel"] = label
-        # 심각도: 뉴스는 감성 강도 반영
+        # 심각도: 타입 가중치 → PIT CAR 보정(이벤트 발생일 기준, 누출 방지) → 뉴스 감성 강도
         if updates.get("severity") is None:
             base = sev.base_severity(updates["eventType"])
+            basis = {"base": base, "statsN": 0}
+            if cars_ledger is not None and not cars_ledger.empty and updates.get("occurredAt"):
+                market = updates.get("market") or (
+                    "KR" if e["eventId"].startswith(("dart", "naver", "press")) else "US")
+                stats = event_study.pit_type_stats(
+                    cars_ledger, updates["eventType"], market,
+                    as_of=str(updates["occurredAt"])[:10], min_n=10)
+                if stats:
+                    base = sev.adjust_with_car(base, abs(stats["carMean"]), n=stats["n"])
+                    basis = {"base": basis["base"], "statsN": stats["n"],
+                             "statsCarMean": stats["carMean"], "statsAsOf": stats["asOf"]}
             if otype == "NewsEvent":
                 base = round(min(1.0, base + 0.35 * abs(updates.get("sentiment") or 0.0)), 3)
             updates["severity"] = base
+            updates["severityBasis"] = basis
         if use_embed:
             updates["embeddingId"] = e["eventId"]
         store.append_object("source", otype, updates)

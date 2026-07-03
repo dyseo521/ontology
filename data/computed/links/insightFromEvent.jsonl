@@ -1,8 +1,8 @@
-{"fromType":"Insight","from":"ins_event_dart_20260626000597","toType":"DisclosureEvent","to":"dart:20260626000597"}
-{"fromType":"Insight","from":"ins_event_dart_20260626000675","toType":"DisclosureEvent","to":"dart:20260626000675"}
-{"fromType":"Insight","from":"ins_event_dart_20260630000459","toType":"DisclosureEvent","to":"dart:20260630000459"}
-{"fromType":"Insight","from":"ins_event_dart_20260630000544","toType":"DisclosureEvent","to":"dart:20260630000544"}
-{"fromType":"Insight","from":"ins_event_dart_20260630000993","toType":"DisclosureEvent","to":"dart:20260630000993"}
-{"fromType":"Insight","from":"ins_event_dart_20260701000525","toType":"DisclosureEvent","to":"dart:20260701000525"}
-{"fromType":"Insight","from":"ins_event_dart_20260701000528","toType":"DisclosureEvent","to":"dart:20260701000528"}
-{"fromType":"Insight","from":"ins_event_dart_20260701000532","toType":"DisclosureEvent","to":"dart:20260701000532"}
+{"fromType":"Insight","from":"ins_event_naver_0180006321857","toType":"NewsEvent","to":"naver:0180006321857"}
+{"fromType":"Insight","from":"ins_event_naver_2770005785115","toType":"NewsEvent","to":"naver:2770005785115"}
+{"fromType":"Insight","from":"ins_event_naver_3740000519870","toType":"NewsEvent","to":"naver:3740000519870"}
+{"fromType":"Insight","from":"ins_event_naver_4210009040072","toType":"NewsEvent","to":"naver:4210009040072"}
+{"fromType":"Insight","from":"ins_event_naver_4690000939766","toType":"NewsEvent","to":"naver:4690000939766"}
+{"fromType":"Insight","from":"ins_event_press_06bf5eef93ae","toType":"NewsEvent","to":"press:06bf5eef93ae"}
+{"fromType":"Insight","from":"ins_event_press_0ab6e3552644","toType":"NewsEvent","to":"press:0ab6e3552644"}
+{"fromType":"Insight","from":"ins_event_press_df6d1d68e75b","toType":"NewsEvent","to":"press:df6d1d68e75b"}

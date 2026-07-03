@@ -18,18 +18,20 @@ def test_compute_car_detects_abnormal_drop():
     event_date = idx[300]
     # 이벤트창 [-1,+5] 에 하루 -3% 비정상 수익률 주입
     r_i.iloc[301] -= 0.03
-    car = compute_car(r_i, r_m, event_date)
-    assert car is not None
-    assert car == pytest.approx(-0.03, abs=0.012)
+    res = compute_car(r_i, r_m, event_date)
+    assert res is not None
+    assert res["car"] == pytest.approx(-0.03, abs=0.012)
+    assert res["scar"] < -2.0  # BMP 표준화로도 뚜렷한 음의 이상수익
 
 
 def test_compute_car_no_abnormal_is_near_zero():
     rng = np.random.default_rng(11)
     idx, r_m = _series(rng)
     r_i = 0.9 * r_m + pd.Series(rng.normal(0, 0.002, len(idx)), index=idx)
-    car = compute_car(r_i, r_m, idx[250])
-    assert car is not None
-    assert abs(car) < 0.02
+    res = compute_car(r_i, r_m, idx[250])
+    assert res is not None
+    assert abs(res["car"]) < 0.02
+    assert abs(res["scar"]) < 3.0
 
 
 def test_compute_car_insufficient_history():

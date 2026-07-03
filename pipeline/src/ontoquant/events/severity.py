@@ -22,8 +22,10 @@ def macro_severity(z_score: float) -> float:
     return min(1.0, abs(z_score) / 4.0)
 
 
-def adjust_with_car(base: float, car_mean_abs: float | None) -> float:
-    """과거 동일 타입 CAR 평균 절대값(예: 0.02=2%)으로 보정. 근거 없으면 그대로."""
-    if car_mean_abs is None:
+def adjust_with_car(base: float, car_mean_abs: float | None,
+                    n: int = 0, min_n: int = 10) -> float:
+    """과거 동일 타입 CAR 평균 절대값으로 보정 — PIT 통계 기준(누출 방지).
+    표본 부족(n < min_n)이면 근거 없음으로 보고 base 유지."""
+    if car_mean_abs is None or n < min_n:
         return base
     return round(min(1.0, base * (0.6 + min(car_mean_abs / 0.03, 1.4))), 3)
