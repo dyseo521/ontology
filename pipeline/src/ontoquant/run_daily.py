@@ -34,17 +34,15 @@ def stage_ingest(statuses: dict) -> None:
                               "added": added, "errors": [e["status"] for e in errors][:3]}
         except Exception as exc:  # noqa: BLE001
             statuses[name] = {"status": f"failed: {exc}"}
-    # Phase 2 이후: dart, edgar, rss 가 여기에 추가된다
-    try:
-        from ontoquant.ingest import dart, edgar, rss
-        store = OntologyStore().build()
-        for name, mod in (("dart", dart), ("edgar", edgar), ("rss", rss)):
-            try:
-                statuses[name] = mod.run(store)
-            except Exception as exc:  # noqa: BLE001
-                statuses[name] = {"status": f"failed: {exc}"}
-    except ImportError:
-        pass
+    from ontoquant.ingest import company, dart, edgar, fundamentals, news_kr, press_rss, rss
+    store = OntologyStore().build()
+    for name, mod in (("dart", dart), ("edgar", edgar), ("news_kr", news_kr),
+                      ("press_rss", press_rss), ("rss", rss),
+                      ("company", company), ("fundamentals", fundamentals)):
+        try:
+            statuses[name] = mod.run(store)
+        except Exception as exc:  # noqa: BLE001
+            statuses[name] = {"status": f"failed: {exc}"}
 
 
 def stage_compute(statuses: dict) -> None:
