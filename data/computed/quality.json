@@ -168,10 +168,12 @@
   }
  },
  "eventsByMarketYear": {
-  "KR:2023": 1019,
+  "KR:2021": 956,
+  "KR:2022": 2703,
+  "KR:2023": 2743,
   "KR:2024": 2700,
   "KR:2025": 3667,
-  "KR:2026": 4826,
+  "KR:2026": 4776,
   "US:2015": 3,
   "US:2016": 25,
   "US:2017": 41,
@@ -188,86 +190,76 @@
  "eventTypeTop": [
   [
    "INSIDER_OWNERSHIP",
-   5920
+   7622
   ],
   [
    "DISCLOSURE_OTHER",
-   3993
+   6438
   ],
   [
    "EARNINGS",
-   943
+   1334
   ],
   [
    "PERIODIC_REPORT",
-   365
+   602
   ],
   [
    "MAJOR_HOLDINGS",
-   314
+   469
+  ],
+  [
+   "DIVIDEND",
+   342
+  ],
+  [
+   "SUPPLY_CONTRACT",
+   268
   ],
   [
    "OTHER_EVENTS",
    249
   ],
   [
-   "DIVIDEND",
-   243
-  ],
-  [
-   "NEWS",
-   211
+   "BUYBACK_DISPOSAL",
+   218
   ],
   [
    "EXEC_CHANGE",
-   200
+   206
   ],
   [
    "RATE_SHOCK",
    180
   ],
   [
-   "SUPPLY_CONTRACT",
-   159
-  ],
-  [
-   "REG_FD",
-   147
+   "ANALYST_RATING",
+   155
   ]
  ],
  "newsWindow": {
   "start": "2026-06-26",
   "end": "2026-07-03",
-  "count": 367
+  "count": 317
  },
  "fundamentalsQuartersMedian": 13,
  "eventStudyThinTypes": [
   {
    "eventType": "ACQUISITION",
    "market": "US",
-   "n": 6
-  },
-  {
-   "eventType": "ANALYST_RATING",
-   "market": "KR",
-   "n": 4
+   "n": 3
   },
   {
    "eventType": "BONUS_ISSUE",
    "market": "KR",
    "n": 3
-  },
-  {
-   "eventType": "PRODUCT_LAUNCH",
-   "market": "KR",
-   "n": 1
   }
  ],
  "flags": [
   {
    "severity": "INFO",
    "area": "events",
-   "message": "KR 이벤트가 US 대비 15.6배 (겹치는 기간). 최다 타입 INSIDER_OWNERSHIP 5920건이 주 원인",
+   "message": "KR 이벤트가 US 대비 15.0배 (겹치는 기간). 최다 타입 INSIDER_OWNERSHIP 7622건이 주 원인",
    "fix": "이벤트 스터디는 타입×시장별이라 통계 왜곡 없음. 전파는 severity 가중으로 완충"
   },
   {

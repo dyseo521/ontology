@@ -66,7 +66,7 @@ def run(store: OntologyStore, today: date | None = None) -> dict:
             etype, item = classify_edgar(form, f["summary"] + " " + f["title"])
             base = {
                 "eventId": eid, "eventType": etype, "occurredAt": f["updated"],
-                "title": f"{label} — {form}" + (f" (Item {item})" if item else ""),
+                "title": f"{label} · {form}" + (f" (Item {item})" if item else ""),
                 "summary": re.sub(r"<[^>]+>", " ", f["summary"]).strip()[:300] or None,
                 "sourceUrl": f["href"], "market": "US",
             }

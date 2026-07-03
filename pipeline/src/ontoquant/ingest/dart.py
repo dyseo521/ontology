@@ -46,7 +46,7 @@ def event_from_row(row: dict, instrument_id: str) -> tuple[str, dict]:
         "eventId": f"dart:{row['rcept_no']}",
         "eventType": etype,
         "occurredAt": occurred,
-        "title": f"{row.get('corp_name', '')} — {row.get('report_nm', '').strip()}",
+        "title": f"{row.get('corp_name', '')} · {row.get('report_nm', '').strip()}",
         "summary": None,
         "sourceUrl": f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={row['rcept_no']}",
         "market": "KR",

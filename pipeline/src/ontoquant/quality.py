@@ -75,16 +75,23 @@ def run(store: OntologyStore | None = None, verbose: bool = True) -> dict:
         if dom_n / len(events) > 0.5:
             flag("INFO", "events", f"타입 편중: {dom_type} 이 전체의 {dom_n / len(events) * 100:.0f}%",
                  "절차성 공시(임원 보고 등)는 severity 가 낮아 인사이트에 과대 반영되지 않음")
-    # 기간 비대칭: 한쪽 시장의 표본이 훨씬 이른 시기부터 시작하면 CAR 통계가
-    # 서로 다른 시장 국면을 학습하게 된다 (매우 중요)
-    kr_years = sorted(int(y) for (m, y) in by_market_year if m == "KR" and by_market_year[(m, y)] >= 20)
-    us_years = sorted(int(y) for (m, y) in by_market_year if m == "US" and by_market_year[(m, y)] >= 20)
-    if kr_years and us_years and abs(kr_years[0] - us_years[0]) > 1:
-        earlier, later = ("US", "KR") if us_years[0] < kr_years[0] else ("KR", "US")
-        flag("MED", "events",
-             f"기간 비대칭: {earlier} 표본은 {min(us_years[0], kr_years[0])}년부터, "
-             f"{later} 는 {max(us_years[0], kr_years[0])}년부터 — CAR 통계의 국면이 다름",
-             f"{later} 이벤트 백필 기간 확장 (backfill --years)")
+    # 기간 비대칭 (매우 중요): 통계에 실제로 쓰이는 CAR 원장의 기간을 비교한다.
+    # 원시 이벤트가 더 오래됐어도 가격 추정창이 없으면 원장에 못 들어가므로,
+    # 원장 기준이 국면 정합성의 올바른 척도다.
+    ledger_path = config.COMPUTED_DIR / "event_cars.parquet"
+    if ledger_path.exists():
+        ledger = pd.read_parquet(ledger_path)
+        starts = {}
+        for market, g in ledger.groupby("market"):
+            starts[market] = pd.to_datetime(g["eventDate"]).min()
+        if "KR" in starts and "US" in starts:
+            gap_days = abs((starts["KR"] - starts["US"]).days)
+            if gap_days > 400:
+                later = "KR" if starts["KR"] > starts["US"] else "US"
+                flag("MED", "events",
+                     f"CAR 원장 기간 비대칭: KR {starts['KR'].date()} ~ vs US {starts['US'].date()} ~ "
+                     f"(차이 {gap_days}일) — 통계가 다른 시장 국면 기반",
+                     f"{later} 이벤트 백필 기간 확장 (backfill --years)")
 
     # ── 3) 뉴스 커버리지 ────────────────────────────────────────────
     news = store.query("NewsEvent")

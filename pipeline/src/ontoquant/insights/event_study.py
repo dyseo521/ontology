@@ -46,7 +46,11 @@ def compute_car(r_i: pd.Series, r_m: pd.Series, event_date: pd.Timestamp) -> dic
     idx = df.index.searchsorted(event_date)
     if idx >= len(df.index):
         return None
-    est = df.iloc[max(0, idx + EST_START): idx + EST_END]
+    # 가격 히스토리 시작 이전 이벤트 방지: 추정창이 음수 인덱스로 넘어가면
+    # iloc 슬라이스가 엉뚱한 구간을 잡는다 (2015년 이벤트가 2021년 가격으로 계산되는 버그)
+    if idx + EST_START < 0:
+        return None
+    est = df.iloc[idx + EST_START: idx + EST_END]
     evt = df.iloc[max(0, idx + EVT_START): idx + EVT_END + 1]
     if len(est) < MIN_EST_OBS or len(evt) < (EVT_END - EVT_START):
         return None
@@ -155,16 +159,24 @@ def _kp_adjust(t_bmp: float, sub: pd.DataFrame, store: OntologyStore | None) -> 
     n = len(sub)
     if n < 2:
         return t_bmp, 0
-    dates = sub[["eventDate", "instrumentId", "market"]].reset_index(drop=True)
+    # 대표본은 O(n²) 쌍 비교가 불가 — 최근 300건 샘플로 겹침 비율을 추정 (통계적으로 충분)
+    KP_SAMPLE = 300
+    sampled = sub.sort_values("eventDate").tail(KP_SAMPLE) if n > KP_SAMPLE else sub
+    dates = sampled[["eventDate", "instrumentId", "market"]].reset_index(drop=True)
+    m = len(dates)
     window = pd.Timedelta(days=9)  # 이벤트창 [-1,+5] ≈ 달력 9일
     pairs = []
     involved: set[int] = set()
-    for i in range(n):
-        for j in range(i + 1, n):
-            if abs((dates.eventDate[i] - dates.eventDate[j])) <= window \
-                    and dates.instrumentId[i] != dates.instrumentId[j]:
+    # 날짜 정렬 상태 + 슬라이딩 윈도우: 9일 밖이면 내부 루프 중단 → O(n×k)
+    for i in range(m):
+        for j in range(i + 1, m):
+            if (dates.eventDate[j] - dates.eventDate[i]) > window:
+                break
+            if dates.instrumentId[i] != dates.instrumentId[j]:
                 pairs.append((dates.instrumentId[i], dates.instrumentId[j]))
                 involved.update((i, j))
+    # 샘플에서 추정한 '겹침 연루 비율'을 전체 n 으로 환산
+    involved_n = int(len(involved) / max(m, 1) * n)
     if not pairs or store is None:
         return t_bmp, len(pairs)
     market = str(dates.market.iloc[0])
@@ -189,7 +201,7 @@ def _kp_adjust(t_bmp: float, sub: pd.DataFrame, store: OntologyStore | None) -> 
     if not cors:
         return t_bmp, len(pairs)
     r_bar = max(0.0, float(np.mean(cors)))
-    n_ov = max(2, len(involved))  # 겹침 연루 이벤트 수 기준 (전체 n 으로 하면 과보정)
+    n_ov = max(2, involved_n)  # 겹침 연루 이벤트 수 기준 (전체 n 으로 하면 과보정)
     adj = np.sqrt((1 - r_bar) / (1 + (n_ov - 1) * r_bar)) if r_bar < 1 else 0.0
     return t_bmp * float(adj), len(pairs)
 

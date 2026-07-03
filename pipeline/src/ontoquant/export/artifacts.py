@@ -24,8 +24,9 @@ GRAPH_EVENT_CAP = 12   # 그래프에는 영향도 상위 이벤트만 (피드�
 
 def _write(path: Path, obj) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")),
-                    encoding="utf-8")
+    text = json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
+    # 표시 계층 규칙: 엠대시 금지 (과거 저장 데이터 안전망 — 원장은 건드리지 않음)
+    path.write_text(text.replace("—", "·"), encoding="utf-8")
 
 
 def _node(object_type: str, pk: str, label: str, props: dict) -> dict:
