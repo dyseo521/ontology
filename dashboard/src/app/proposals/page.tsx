@@ -84,7 +84,7 @@ export default function ProposalsPage() {
                     <div className="grid-tiles" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
                       <div className="soft-tile">
                         <div className="caption" style={{ display: "flex", alignItems: "center" }}>
-                          성과 점수<Tooltip text="위험 대비 수익입니다 (Sharpe). 오른쪽의 '그대로 둘 때'보다 높아야 통과합니다." />
+                          성과 점수<Tooltip text="같은 위험을 지고 얼마나 벌었는지입니다. 오른쪽의 '그대로 둘 때'보다 높아야 통과합니다." />
                         </div>
                         <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>
                           {(ms.sharpe ?? ms.oosSharpe)?.toFixed(2)}{" "}

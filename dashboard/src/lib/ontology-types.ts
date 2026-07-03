@@ -44,6 +44,7 @@ export interface DisclosureEvent {
   severity?: number;
   sourceUrl?: string;
   embeddingId?: string;
+  severityBasis?: unknown;
 }
 
 /** 실적 이벤트 — 실적 발표 (DART 실적공시 / 8-K item 2.02). Event 인터페이스 구현. */
@@ -61,6 +62,7 @@ export interface EarningsEvent {
   severity?: number;
   sourceUrl?: string;
   embeddingId?: string;
+  severityBasis?: unknown;
 }
 
 /** 평가 실행 — MetricSet 패턴 — 모델 버전 + 데이터 범위에 바인딩된 평가 결과와 게이트 판정. */
@@ -166,6 +168,7 @@ export interface MacroEvent {
   severity?: number;
   sourceUrl?: string;
   embeddingId?: string;
+  severityBasis?: unknown;
 }
 
 /** 모델 버전 — Modeling Objective 패턴. 팩터모델/이벤트분류기/리밸런싱전략의 버전과 스테이지. */
@@ -195,6 +198,7 @@ export interface NewsEvent {
   severity?: number;
   sourceUrl?: string;
   embeddingId?: string;
+  severityBasis?: unknown;
 }
 
 /** 포트폴리오 — 사용자 포트폴리오. writeback 계층(portfolio.json)이 정본. */

@@ -23,7 +23,7 @@ export default function DecisionsPage() {
       <section className="section-sm">
         <h2 className="headline" style={{ marginBottom: 20 }}>결정 {decisions.length}건</h2>
         {decisions.length === 0 ? (
-          <p className="body">아직 기록된 결정이 없습니다. MCP <code>approveProposal</code> 액션이 첫 기록을 만듭니다.</p>
+          <p className="body">아직 기록된 결정이 없습니다. 제안을 승인하거나 반려하면 여기에 남습니다.</p>
         ) : (
           <ol style={{ display: "grid", gap: 0 }}>
             {decisions.map((d) => (
