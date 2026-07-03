@@ -119,3 +119,4 @@
 {"fromType":"ModelVersion","from":"event-classifier@1.0.0","toType":"EvaluationRun","to":"eval_e774ae77da"}
 {"fromType":"ModelVersion","from":"event-classifier@1.0.0","toType":"EvaluationRun","to":"eval_a1afc5b073"}
 {"fromType":"ModelVersion","from":"rebalance-strategy@1.0.0","toType":"EvaluationRun","to":"eval_1851f96cec"}
+{"fromType":"ModelVersion","from":"factor-model@1.0.0","toType":"EvaluationRun","to":"eval_ba26aa5811"}

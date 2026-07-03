@@ -45,6 +45,9 @@ def portfolio_history(store, lookback_days: int = 600) -> pd.DataFrame | None:
     fx = load_usdkrw()
     frames: dict[str, pd.Series] = {}
     for pos in positions:
+        # writeback(portfolio.json)에 없는 유령 포지션(과거 computed 스냅샷 잔재) 제외
+        if pos.get("quantity") is None:
+            continue
         inst = store.get("Instrument", pos["instrumentId"])
         if inst is None:
             continue
