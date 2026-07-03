@@ -28,14 +28,19 @@ function SentimentPill({ v }: { v?: number | null }) {
 export default function EventFilter({ events }: { events: EventView[] }) {
   const [tab, setTab] = useState("ALL");
   const [minImpact, setMinImpact] = useState(true);
+  const [sortImpact, setSortImpact] = useState(true);
   const [limit, setLimit] = useState(PAGE);
-  const filtered = useMemo(
-    () => events
+  const filtered = useMemo(() => {
+    const list = events
       .filter((e) => tab === "ALL" || e.objectType === tab)
       .filter((e) => !minImpact || (e.impact?.portfolioImpactScore ?? 0) > 0.001
-        || Math.abs(e.sentiment ?? 0) > 0.5),
-    [events, tab, minImpact],
-  );
+        || Math.abs(e.sentiment ?? 0) > 0.5);
+    if (sortImpact) {
+      return [...list].sort((a, b) =>
+        (b.impact?.portfolioImpactScore ?? 0) - (a.impact?.portfolioImpactScore ?? 0));
+    }
+    return list; // export 기본 정렬 = 최신순
+  }, [events, tab, minImpact, sortImpact]);
 
   return (
     <div>
@@ -46,8 +51,12 @@ export default function EventFilter({ events }: { events: EventView[] }) {
             {t.label}
           </button>
         ))}
+        <button className="pill pill-tab" data-active={sortImpact} aria-pressed={sortImpact}
+                onClick={() => setSortImpact(!sortImpact)} style={{ marginLeft: "auto" }}>
+          {sortImpact ? "영향 큰 순" : "최신순"}
+        </button>
         <button className="pill pill-tab" data-active={minImpact} aria-pressed={minImpact}
-                onClick={() => setMinImpact(!minImpact)} style={{ marginLeft: "auto" }}>
+                onClick={() => setMinImpact(!minImpact)}>
           핵심만
         </button>
       </div>

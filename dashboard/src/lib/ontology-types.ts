@@ -69,7 +69,7 @@ export interface EarningsEvent {
 export interface EvaluationRun {
   runId: string;
   modelVersionId: string;
-  runType: "FACTOR_QUALITY" | "EVENT_STUDY" | "PROPOSAL_BACKTEST" | "WALK_FORWARD" | "DECISION_OUTCOME";
+  runType: "FACTOR_QUALITY" | "EVENT_STUDY" | "PROPOSAL_BACKTEST" | "WALK_FORWARD" | "DECISION_OUTCOME" | "SIGNAL_AUDIT" | "SOURCE_VALIDITY";
   metricSet: unknown;
   datasetRange: { start: string; end: string };
   passedGates: boolean;
@@ -125,7 +125,7 @@ export interface Fundamental {
 /** 인사이트 — 이벤트/리스크에서 도출된 해석. 이벤트 스터디로 검증되어야 VALIDATED. */
 export interface Insight {
   insightId: string;
-  insightType: "EVENT_IMPACT" | "LIMIT_BREACH" | "EXPOSURE_SHIFT" | "CONCENTRATION" | "FACTOR_MOVE" | "SECTOR_CONCENTRATION" | "SECTOR_EVENT_CLUSTER" | "CASH_ALLOCATION" | "NEWS_SENTIMENT_SHIFT" | "FUNDAMENTAL_SHIFT";
+  insightType: "EVENT_IMPACT" | "LIMIT_BREACH" | "EXPOSURE_SHIFT" | "CONCENTRATION" | "FACTOR_MOVE" | "SECTOR_CONCENTRATION" | "SECTOR_EVENT_CLUSTER" | "CASH_ALLOCATION" | "NEWS_SENTIMENT_SHIFT" | "FUNDAMENTAL_SHIFT" | "TRADE_SIGNAL";
   sectorId?: string;
   recommendedAction?: { label: string; actionApiName?: string; paramsPreset?: unknown };
   title: string;
@@ -175,7 +175,7 @@ export interface MacroEvent {
 /** 모델 버전 — Modeling Objective 패턴. 팩터모델/이벤트분류기/리밸런싱전략의 버전과 스테이지. */
 export interface ModelVersion {
   modelVersionId: string;
-  modelId: "factor-model" | "event-classifier" | "rebalance-strategy";
+  modelId: "factor-model" | "event-classifier" | "rebalance-strategy" | "signal-model";
   version: string;
   stage: "STAGING" | "PRODUCTION" | "ARCHIVED";
   params?: unknown;

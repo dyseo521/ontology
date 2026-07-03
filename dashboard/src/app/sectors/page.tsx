@@ -71,7 +71,7 @@ export default function SectorsPage() {
                 {s.members.map((m) => (
                   <Link key={m.instrumentId} className="body-sm link-strong"
                         href={`/instruments/${m.instrumentId.replace(/:/g, "_")}/`}>
-                    {m.name} <span className="caption">{fmtPct(m.weight, 1)}</span>
+                    {m.name} <span className="caption">{m.ticker} · {fmtPct(m.weight, 1)}</span>
                   </Link>
                 ))}
                 <span className="body-sm" style={{ marginLeft: "auto", opacity: 0.75 }}>

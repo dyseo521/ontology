@@ -40,6 +40,15 @@ INITIAL_MODEL_VERSIONS = [
                    "costBpKr": 10, "costBpUs": 5},
         "description": "이벤트 기반 감축 규칙 — 게이트 2회 통과 후 PRODUCTION 승격 대상",
     },
+    {
+        "modelVersionId": "signal-model@1.0.0",
+        "modelId": "signal-model",
+        "version": "1.0.0",
+        "stage": "STAGING",
+        "params": {"windowBd": 5, "newsKappa": 0.01, "sectorDamp": 0.5, "minN": 10,
+                   "conviction": "0.6*strength_pct + 0.4*evidence_share"},
+        "description": "온톨로지 매수/매도 시그널 — PIT CAR×심각도×연관도×감쇠 합성, 감사로 채점",
+    },
 ]
 
 # v3: 개별 주식 최대 15종목(maxHoldings, ETF 제외). 코스피 지수(069500)는 거래 불가라

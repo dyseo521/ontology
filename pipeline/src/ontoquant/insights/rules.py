@@ -71,7 +71,7 @@ def concentration_insights(store: OntologyStore, as_of: str) -> tuple[list[dict]
 
 def run(store: OntologyStore, as_of: str, extra: tuple[list[dict], list[LinkRecord]] | None = None) -> dict:
     """모든 규칙 실행 → Insight 스냅샷 + 링크 교체. extra 로 이벤트 인사이트 병합."""
-    from ontoquant.insights import sector_rules
+    from ontoquant.insights import sector_rules, signal_rules
 
     all_insights: list[dict] = []
     about_links: list[LinkRecord] = []
@@ -80,10 +80,11 @@ def run(store: OntologyStore, as_of: str, extra: tuple[list[dict], list[LinkReco
         ins, links = fn(store, as_of)
         all_insights.extend(ins)
         about_links.extend(links)
-    ins, links = sector_rules.build(store, as_of)
-    all_insights.extend(ins)
-    for l in links:
-        (event_links if l.linkType == "insightFromEvent" else about_links).append(l)
+    for builder in (sector_rules.build, signal_rules.build):
+        ins, links = builder(store, as_of)
+        all_insights.extend(ins)
+        for l in links:
+            (event_links if l.linkType == "insightFromEvent" else about_links).append(l)
     if extra:
         ins, links = extra
         all_insights.extend(ins)

@@ -15,7 +15,8 @@ import traceback
 
 from ontoquant.core.store import OntologyStore
 
-ALL_STAGES = ["ingest", "compute", "events", "propagation", "insights", "proposals", "export"]
+ALL_STAGES = ["ingest", "compute", "events", "propagation", "signals", "insights",
+              "proposals", "export"]
 
 
 def stage_ingest(statuses: dict) -> None:
@@ -74,6 +75,13 @@ def stage_propagation(statuses: dict) -> None:
     statuses["propagation"] = impact.run(store)
 
 
+def stage_signals(statuses: dict) -> None:
+    from ontoquant.signals import audit as signal_audit
+
+    store = OntologyStore().build()
+    statuses["signals"] = signal_audit.run(store)
+
+
 def stage_insights(statuses: dict) -> None:
     from ontoquant.insights import event_study, rules
 
@@ -122,6 +130,7 @@ STAGE_FNS = {
     "compute": stage_compute,
     "events": stage_events,
     "propagation": stage_propagation,
+    "signals": stage_signals,
     "insights": stage_insights,
     "proposals": stage_proposals,
     "export": stage_export,

@@ -1,7 +1,7 @@
 import { StatusBadge } from "@/components/Badge";
 import Tooltip from "@/components/Tooltip";
 import BacktestChart from "./BacktestChart";
-import { loadBacktest, loadPortfolio, loadProposals } from "@/lib/data";
+import { loadBacktest, loadInstruments, loadPortfolio, loadProposals } from "@/lib/data";
 import { fmtDateTime, fmtPct } from "@/lib/format";
 
 const SIDE_LABEL: Record<string, string> = { BUY: "매수", SELL: "매도", HOLD: "보유" };
@@ -9,6 +9,7 @@ const SIDE_LABEL: Record<string, string> = { BUY: "매수", SELL: "매도", HOLD
 export default function ProposalsPage() {
   const proposals = loadProposals();
   const held = new Set(loadPortfolio().positions.filter((p) => p.quantity > 0).map((p) => p.instrumentId));
+  const master = new Map(loadInstruments().map((i) => [i.instrumentId, i]));
   return (
     <div className="container">
       <section className="section-sm" style={{ marginTop: 48 }}>
@@ -61,7 +62,12 @@ export default function ProposalsPage() {
                       {p.legs.map((leg, i) => (
                         <tr key={i}>
                           <td className="body-sm">
-                            {leg.instrumentId}
+                            <span style={{ fontWeight: 480 }}>
+                              {master.get(leg.instrumentId)?.nameKo ?? master.get(leg.instrumentId)?.name ?? leg.instrumentId}
+                            </span>
+                            <span className="caption" style={{ marginLeft: 6 }}>
+                              {master.get(leg.instrumentId)?.ticker ?? ""}
+                            </span>
                             {!held.has(leg.instrumentId) && leg.targetWeightDelta > 0 && (
                               <span className="badge badge--stage" style={{
                                 marginLeft: 8, background: "var(--block-lilac)", border: "none",

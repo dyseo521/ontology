@@ -80,7 +80,7 @@ export interface EventView {
 export interface SectorView {
   sectorId: string; name: string; nameKo?: string; colorToken?: string;
   weight: number;
-  members: { instrumentId: string; name?: string; weight: number; contribVar?: number | null }[];
+  members: { instrumentId: string; name?: string; ticker?: string; weight: number; contribVar?: number | null }[];
   contribVar: number;
   recentEvents: number;
   insightIds: string[];
@@ -162,6 +162,24 @@ export const loadSchemaDoc = () => readJson<SchemaDoc>("schema.json", { objectTy
 export const loadScenarios = () => readJson<ScenarioView[]>("scenarios.json", []);
 export const loadSectors = () => readJson<SectorView[]>("sectors.json", []);
 export const loadInstruments = () => readJson<InstrumentMaster[]>("instruments.json", []);
+export const loadSignals = () => readJson<SignalsDoc | null>("signals.json", null);
+
+export interface SignalsDoc {
+  asOf: string;
+  board: {
+    instrumentId: string; name: string; ticker: string;
+    held: boolean; tradable: boolean;
+    direction: "BUY" | "SELL"; signal: number; expected5d: number;
+    strength: number; evidenceShare: number; conviction: number;
+    strengthNote?: string | null;
+    evidence: { eventId: string; eventType: string; validated: boolean }[];
+  }[];
+  audit: Record<string, {
+    meanIC?: number; icTstat?: number; hitRateStrong?: number | null;
+    nObs?: number; byYear?: Record<string, unknown>;
+  } | null>;
+  sourceValidity?: { useful: string[]; weak: string[] };
+}
 
 export interface InstrumentMaster {
   instrumentId: string; ticker: string; name: string; nameKo?: string;

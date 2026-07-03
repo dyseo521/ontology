@@ -12,7 +12,7 @@ properties:
     description: "{modelId}@{semver}. 예: factor-model@1.0.0"
   modelId:
     type: string
-    enum: [factor-model, event-classifier, rebalance-strategy]
+    enum: [factor-model, event-classifier, rebalance-strategy, signal-model]
   version:
     type: string
   stage:

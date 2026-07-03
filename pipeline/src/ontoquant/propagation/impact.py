@@ -107,9 +107,11 @@ def run(store: OntologyStore) -> dict:
     weights: dict[str, tuple[str, float, str]] = {}
     for pos in store.query("Position"):
         inst = store.get("Instrument", pos["instrumentId"]) or {}
+        name = inst.get("nameKo") or inst.get("name") or pos["instrumentId"]
+        ticker = inst.get("ticker")
         weights[pos["instrumentId"]] = (
             pos["positionId"], float(pos.get("weight") or 0.0),
-            inst.get("nameKo") or inst.get("name") or pos["instrumentId"],
+            f"{name}({ticker})" if ticker else name,
         )
     cutoff = (datetime.now(timezone.utc) - timedelta(days=RECENT_DAYS)).isoformat()
     event_types = store.schema.interfaces["Event"].implementedBy

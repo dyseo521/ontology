@@ -30,3 +30,6 @@
 {"fromType":"Insight","from":"ins_seccluster_IT_","toType":"Instrument","to":"XNAS:AAPL"}
 {"fromType":"Insight","from":"ins_seccluster_IT_","toType":"Instrument","to":"XNAS:MSFT"}
 {"fromType":"Insight","from":"ins_seccluster_IT_","toType":"Instrument","to":"XNAS:NVDA"}
+{"fromType":"Insight","from":"ins_signal_KRX_005380_","toType":"Instrument","to":"KRX:005380"}
+{"fromType":"Insight","from":"ins_signal_KRX_005930_","toType":"Instrument","to":"KRX:005930"}
+{"fromType":"Insight","from":"ins_signal_KRX_068270_","toType":"Instrument","to":"KRX:068270"}

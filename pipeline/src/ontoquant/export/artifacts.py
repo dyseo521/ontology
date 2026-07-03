@@ -271,6 +271,7 @@ def export_all(store: OntologyStore, statuses: dict | None = None) -> dict:
             "members": [
                 {"instrumentId": iid,
                  "name": (instruments.get(iid, {}).get("nameKo") or instruments.get(iid, {}).get("name")),
+                 "ticker": instruments.get(iid, {}).get("ticker"),
                  "weight": round(w, 4),
                  "contribVar": contrib.get(f"{pf_id}:{iid}")}
                 for iid, w in sorted(members.get(s["sectorId"], []), key=lambda x: -x[1])
@@ -282,6 +283,11 @@ def export_all(store: OntologyStore, statuses: dict | None = None) -> dict:
         }
         for s in sorted(store.query("Sector"), key=lambda s: -totals.get(s["sectorId"], 0))
     ])
+
+    # signals.json — 오늘의 시그널 보드 + 감사 성적표
+    board_path = config.COMPUTED_DIR / "signals_today.json"
+    if board_path.exists():
+        _write(out / "signals.json", json.loads(board_path.read_text(encoding="utf-8")))
 
     _write(out / "scenarios.json", store.query("Scenario", order_by="createdAt"))
 
