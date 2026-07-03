@@ -1,4 +1,5 @@
 import { StatusBadge } from "@/components/Badge";
+import Tooltip from "@/components/Tooltip";
 import BacktestChart from "./BacktestChart";
 import { loadBacktest, loadProposals } from "@/lib/data";
 import { fmtDateTime, fmtPct } from "@/lib/format";
@@ -10,12 +11,11 @@ export default function ProposalsPage() {
   return (
     <div className="container">
       <section className="section-sm" style={{ marginTop: 48 }}>
-        <div className="eyebrow">REBALANCE PROPOSALS · BACKTEST-GATED</div>
-        <h1 className="display-lg" style={{ margin: "12px 0 8px" }}>리밸런싱 제안</h1>
-        <p className="body-lg" style={{ maxWidth: 780 }}>
-          제안은 3년 walk-forward 백테스트(거래비용 포함)로 검증되며,
-          게이트(<span className="mono-num">Sharpe &gt; 베이스라인 AND MDD ≤ 베이스라인×1.1</span>)를
-          통과해야만 승인할 수 있습니다. 결재는 Claude Code MCP의 <code>approveProposal</code> 액션으로.
+        <div className="eyebrow">PROPOSALS</div>
+        <h1 className="display-lg" style={{ margin: "12px 0 8px" }}>매수·매도 제안</h1>
+        <p className="body-lg" style={{ maxWidth: 760 }}>
+          모든 제안은 과거 3년으로 미리 돌려본 뒤에 옵니다 (거래비용 포함).
+          그대로 둔 것보다 낫지 않으면 승인 자체가 막힙니다.
         </p>
       </section>
 
@@ -24,8 +24,7 @@ export default function ProposalsPage() {
           <div className="color-block" style={{ background: "var(--block-coral)" }}>
             <h2 className="headline">아직 제안이 없습니다</h2>
             <p className="body" style={{ marginTop: 8, maxWidth: 640 }}>
-              파이프라인이 이벤트·한도 위반에서 제안을 생성하거나, Claude Code에서
-              <code> propose_rebalance</code> MCP 도구로 직접 생성할 수 있습니다.
+              한도를 넘거나 위험 신호가 잡히면 시스템이 제안을 만들어 여기에 올립니다.
             </p>
           </div>
         </section>
@@ -43,7 +42,7 @@ export default function ProposalsPage() {
                     <span className="badge" style={p.backtest.passedGates
                       ? { background: "var(--semantic-success)", color: "#fff" }
                       : { background: "var(--semantic-danger)", color: "#fff" }}>
-                      백테스트 {p.backtest.passedGates ? "게이트 통과" : "게이트 실패"}
+                      {p.backtest.passedGates ? "검증 통과" : "검증 미달"}
                     </span>
                   )}
                   <span className="caption" style={{ marginLeft: "auto" }}>
@@ -73,7 +72,7 @@ export default function ProposalsPage() {
                           <td className={`num mono-num ${leg.targetWeightDelta > 0 ? "up" : "down"}`}>
                             {fmtPct(leg.targetWeightDelta, 1, true)}p
                           </td>
-                          <td className="body-sm">{leg.reason ?? "—"}</td>
+                          <td className="body-sm">{leg.reason ?? "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -82,26 +81,36 @@ export default function ProposalsPage() {
 
                 {p.backtest && (
                   <div style={{ marginTop: 16 }}>
-                    <div className="grid-tiles" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
+                    <div className="grid-tiles" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
                       <div className="soft-tile">
-                        <div className="caption">Sharpe</div>
+                        <div className="caption" style={{ display: "flex", alignItems: "center" }}>
+                          성과 점수<Tooltip text="위험 대비 수익입니다 (Sharpe). 오른쪽의 '그대로 둘 때'보다 높아야 통과합니다." />
+                        </div>
                         <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>
-                          {ms.sharpe?.toFixed(2)} <span className="caption">vs {ms.sharpeBaseline?.toFixed(2)}</span>
+                          {(ms.sharpe ?? ms.oosSharpe)?.toFixed(2)}{" "}
+                          <span className="caption">vs {(ms.sharpeBaseline ?? ms.oosSharpeBaseline)?.toFixed(2)}</span>
                         </div>
                       </div>
                       <div className="soft-tile">
-                        <div className="caption">MDD</div>
+                        <div className="caption" style={{ display: "flex", alignItems: "center" }}>
+                          최대 하락<Tooltip text="시뮬레이션 기간 중 고점 대비 가장 크게 빠졌던 폭입니다. 작을수록 좋습니다." />
+                        </div>
                         <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>
-                          {fmtPct(ms.mdd, 1)} <span className="caption">vs {fmtPct(ms.mddBaseline, 1)}</span>
+                          {fmtPct(ms.mdd ?? ms.oosMdd, 1)}{" "}
+                          <span className="caption">vs {fmtPct(ms.mddBaseline ?? ms.oosMddBaseline, 1)}</span>
                         </div>
                       </div>
-                      <div className="soft-tile">
-                        <div className="caption">회전율(연)</div>
-                        <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>{fmtPct(ms.turnover, 0)}</div>
-                      </div>
+                      {ms.dsr != null && (
+                        <div className="soft-tile">
+                          <div className="caption" style={{ display: "flex", alignItems: "center" }}>
+                            진짜일 확률<Tooltip text="여러 번 시도한 것을 감안해도 이 성과가 우연이 아닐 확률입니다. 0.95 이상이면 통과." />
+                          </div>
+                          <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>{ms.dsr?.toFixed(2)}</div>
+                        </div>
+                      )}
                       <div className="soft-tile">
                         <div className="caption">거래 수</div>
-                        <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>{ms.nTrades}</div>
+                        <div className="mono-num" style={{ fontSize: 22, fontWeight: 640 }}>{ms.nTrades ?? "-"}</div>
                       </div>
                     </div>
                     {bt && <div style={{ marginTop: 16 }}><BacktestChart data={bt} /></div>}

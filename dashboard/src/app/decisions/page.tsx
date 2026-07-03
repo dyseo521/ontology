@@ -10,11 +10,12 @@ export default function DecisionsPage() {
     <div className="container">
       <section className="section-sm" style={{ marginTop: 48 }}>
         <div className="color-block color-block--navy" style={{ background: "var(--block-navy)" }}>
-          <div className="eyebrow" style={{ color: "#ffffffb0" }}>DECISION CAPTURE · AUDIT LOG</div>
-          <h1 className="display-lg" style={{ margin: "16px 0 12px" }}>결정 로그</h1>
+          <div className="eyebrow" style={{ color: "#ffffffb0" }}>DECISIONS</div>
+          <h1 className="display-lg" style={{ margin: "16px 0 12px" }}>결정 기록</h1>
           <p className="subhead" style={{ color: "#ffffffd0", maxWidth: 760 }}>
-            모든 액션 제출은 추천 스냅샷(값+근거+검증 메트릭)과 사람의 결정·사유를 함께
-            기록합니다 — 결정의 계보(lineage)가 그대로 감사 자산이 됩니다.
+            누가, 언제, 왜 승인하거나 반려했는지 전부 남습니다.
+            당시 시스템이 무엇을 근거로 추천했는지도 함께 저장되어,
+            나중에 결정의 성적을 되짚을 수 있습니다.
           </p>
         </div>
       </section>
@@ -35,7 +36,7 @@ export default function DecisionsPage() {
                 }} />
                 <div className="caption">{fmtDateTime(d.decidedAt)} · {d.decidedBy}</div>
                 <div className="body-lg" style={{ fontWeight: 540, margin: "4px 0" }}>
-                  {DECISION_LABEL[d.decision] ?? d.decision} — {d.subjectType} <span className="caption">{d.subjectId}</span>
+                  {DECISION_LABEL[d.decision] ?? d.decision} · 리밸런싱 제안 <span className="caption">{d.subjectId}</span>
                 </div>
                 <p className="body-sm" style={{ maxWidth: 720 }}>{d.reason}</p>
               </li>

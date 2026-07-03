@@ -55,6 +55,8 @@ export interface InsightView {
   insightId: string; insightType: string; title: string; narrative: string;
   severity: number; confidence?: number | null; validationStatus: string;
   validationSummary?: string | null; evaluationRunId?: string | null;
+  sectorId?: string | null;
+  recommendedAction?: { label: string; actionApiName?: string | null; paramsPreset?: unknown } | null;
   createdAt: string; asOfDate: string;
 }
 
@@ -63,11 +65,25 @@ export interface EventView {
   summary?: string | null; severity?: number | null; sourceUrl?: string | null;
   objectType?: string | null;
   market?: string;
+  sentiment?: number | null;
+  sentimentLabel?: string | null;
+  publisher?: string | null;
+  dupCount?: number | null;
+  instrumentIds?: string[];
   impact?: {
     portfolioImpactScore: number;
     topPositions: { positionId: string; instrumentId: string; label: string; score: number }[];
     paths: unknown[];
   } | null;
+}
+
+export interface SectorView {
+  sectorId: string; name: string; nameKo?: string; colorToken?: string;
+  weight: number;
+  members: { instrumentId: string; name?: string; weight: number; contribVar?: number | null }[];
+  contribVar: number;
+  recentEvents: number;
+  insightIds: string[];
 }
 
 export interface ExposuresDoc {
@@ -144,6 +160,7 @@ export const loadProposals = () => readJson<ProposalView[]>("proposals.json", []
 export const loadDecisions = () => readJson<{ decisions: DecisionView[]; actionLog: Record<string, unknown>[] }>("decisions.json", { decisions: [], actionLog: [] });
 export const loadSchemaDoc = () => readJson<SchemaDoc>("schema.json", { objectTypes: [], interfaces: [], linkTypes: [] });
 export const loadScenarios = () => readJson<ScenarioView[]>("scenarios.json", []);
+export const loadSectors = () => readJson<SectorView[]>("sectors.json", []);
 
 export function loadPrices(instrumentId: string): { instrumentId: string; dates: string[]; close: number[] } | null {
   return readJson(path.join("prices", `${instrumentId.replace(/:/g, "_")}.json`), null as never);

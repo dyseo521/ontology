@@ -53,7 +53,6 @@ def build(store: OntologyStore, as_of: str) -> tuple[list[dict], list[LinkRecord
     for event, report, etype_obj in candidates[:MAX_INSIGHTS]:
         eid = event["eventId"]
         top = report["topPositions"][:3]
-        targets = ", ".join(f"{t['label']}({t['score'] * 100:.2f})" for t in top)
         car = _car_summary(store, event["eventType"], event.get("market"))
         if car and car["n"] >= 10 and abs(car["carT"]) >= 2.0:
             status = "VALIDATED"
@@ -70,14 +69,15 @@ def build(store: OntologyStore, as_of: str) -> tuple[list[dict], list[LinkRecord
 
         car_note = ""
         if car and car["n"] >= 5:
-            car_note = (f" 과거 동일 유형({event['eventType']}) 이벤트 {car['n']}건의 "
-                        f"평균 CAR[-1,+5]는 {car['carMean'] * 100:+.1f}% 였습니다.")
+            car_note = (f" 과거 비슷한 사건 {car['n']}건에서는 발표 후 6일간 "
+                        f"평균 {car['carMean'] * 100:+.1f}% 움직였습니다.")
+        names_only = ", ".join(t["label"] for t in top)
         iid = f"ins_event_{eid.replace(':', '_')}"
         insights.append({
             "insightId": iid, "insightType": "EVENT_IMPACT",
-            "title": f"이벤트 전파: {event['title'][:60]}",
-            "narrative": (f"{event['title']} — 전파 경로 상위: {targets}. "
-                          f"포트폴리오 영향도 {report['portfolioImpactScore'] * 100:.2f}.{car_note}"),
+            "title": event["title"][:64],
+            "narrative": (f"이 소식은 보유 중인 {names_only}에 닿습니다.{car_note} "
+                          f"해당 종목의 비중과 최근 흐름을 확인하세요."),
             "severity": min(1.0, report["portfolioImpactScore"] * 10),
             "confidence": round(min(1.0, (car["n"] / 30) if car else 0.1), 2),
             "validationStatus": status,

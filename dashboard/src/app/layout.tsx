@@ -9,8 +9,8 @@ const sans = Inter({ subsets: ["latin"], variable: "--font-sans", axes: ["opsz"]
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: "OntoQuant — 온톨로지 포트폴리오 리스크",
-  description: "온톨로지로 종목·팩터·이벤트·포트폴리오를 연결한 퀀트 리스크 대시보드",
+  title: "OntoQuant · 내 포트폴리오에 닿는 모든 신호",
+  description: "종목, 섹터, 공시, 뉴스를 하나로 연결해 무엇이 내 포트폴리오를 움직이는지 보여주는 리스크 대시보드",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -21,11 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         return `${k.toUpperCase()} ${String(status).startsWith("ok") ? "●" : "○"}`;
       })
     : ["NAVER", "TIINGO", "FRED", "KEN FRENCH", "DART", "SEC EDGAR"];
-  const ticker = [...sourceNames, `AS OF ${meta.asOf ?? "—"}`, `GENERATED ${fmtDateTime(meta.generatedAt)} UTC`];
+  const ticker = [...sourceNames, `AS OF ${meta.asOf ?? "-"}`, `GENERATED ${fmtDateTime(meta.generatedAt)} UTC`];
 
   return (
     <html lang="ko" className={`${sans.variable} ${mono.variable}`}>
       <body>
+        <a href="#main" className="skip-link">본문으로 건너뛰기</a>
         <TopNav />
         <div className="marquee-strip" aria-hidden>
           <div className="marquee-track">
@@ -38,16 +39,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             ))}
           </div>
         </div>
-        <main>{children}</main>
+        <p className="sr-only">데이터 기준일 {meta.asOf ?? "미상"}, 생성 시각 {fmtDateTime(meta.generatedAt)} UTC</p>
+        <main id="main">{children}</main>
         <footer className="site-footer">
           <div className="container" style={{ padding: 0 }}>
             <div className="wordmark">OntoQuant</div>
             <p className="body-sm" style={{ marginTop: 12, maxWidth: 560 }}>
-              종목·팩터·이벤트를 하나의 온톨로지로 연결하고, 검증된 근거가 있는
-              인사이트와 제안만 결재로 이어지는 퀀트 포트폴리오 리스크 시스템.
+              종목, 섹터, 공시, 뉴스를 하나로 연결해 무엇이 내 포트폴리오를
+              움직이는지 보여줍니다. 근거가 검증된 제안만 승인으로 이어집니다.
             </p>
             <p className="caption" style={{ marginTop: 24 }}>
-              데이터: Naver Finance · Tiingo · FRED · Ken French · DART · SEC EDGAR — 투자 조언이 아님
+              데이터: Naver Finance · Tiingo · FRED · Ken French · DART · SEC EDGAR / 투자 조언이 아닙니다
             </p>
           </div>
         </footer>

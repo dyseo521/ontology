@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { href: "/", label: "홈" },
   { href: "/graph/", label: "그래프" },
+  { href: "/sectors/", label: "섹터" },
   { href: "/events/", label: "이벤트" },
   { href: "/insights/", label: "인사이트" },
   { href: "/proposals/", label: "제안" },
   { href: "/scenarios/", label: "시나리오" },
-  { href: "/decisions/", label: "결정 로그" },
-  { href: "/models/", label: "모델" },
+  { href: "/decisions/", label: "결정 기록" },
+  { href: "/models/", label: "검증" },
 ];
 
 export default function TopNav() {

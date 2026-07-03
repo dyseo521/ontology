@@ -19,6 +19,7 @@ const TOKEN_HEX: Record<string, string> = {
 
 const TYPE_LABELS: Record<string, string> = {
   Portfolio: "포트폴리오", Position: "포지션", Instrument: "종목", Factor: "팩터",
+  Sector: "섹터",
   DisclosureEvent: "공시", EarningsEvent: "실적", MacroEvent: "매크로", NewsEvent: "뉴스",
   Insight: "인사이트",
 };
@@ -44,14 +45,19 @@ export default function OntologyGraph({
   const elements = useMemo(() => {
     const nodeIds = new Set(graph.nodes.map((n) => n.id));
     return [
-      ...graph.nodes.map((n) => ({
-        data: {
-          id: n.id, label: n.label, objectType: n.objectType, pk: n.pk,
-          props: n.props,
-          bg: TOKEN_HEX[colors[n.objectType] ?? ""] ?? "#f7f7f5",
-          fg: (colors[n.objectType] === "block-navy") ? "#ffffff" : "#000000",
-        },
-      })),
+      ...graph.nodes.map((n) => {
+        const token = (n.objectType === "Sector" && typeof n.props.colorToken === "string")
+          ? n.props.colorToken
+          : colors[n.objectType] ?? "";
+        return {
+          data: {
+            id: n.id, label: n.label, objectType: n.objectType, pk: n.pk,
+            props: n.props,
+            bg: TOKEN_HEX[token] ?? "#f7f7f5",
+            fg: token === "block-navy" ? "#ffffff" : "#000000",
+          },
+        };
+      }),
       ...graph.edges
         .filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target))
         .map((e, i) => {
