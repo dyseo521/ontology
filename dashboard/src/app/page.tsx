@@ -64,6 +64,7 @@ export default function HomePage() {
     .slice(0, 5);
   const pnl = portfolio.dailyPnlBase ?? 0;
   const pnlPct = portfolio.totalValueBase ? pnl / (portfolio.totalValueBase - pnl) : 0;
+  const maxHoldings = portfolio.riskLimits?.maxHoldings;
 
   return (
     <div className="container">
@@ -217,10 +218,10 @@ export default function HomePage() {
       <section className="section">
         <div className="flex-between" style={{ marginBottom: 20 }}>
           <h2 className="headline">보유 종목 {positions.length}</h2>
-          {portfolio.riskLimits?.maxHoldings != null && (
+          {maxHoldings != null && (
             <span className="caption" style={{ display: "inline-flex", alignItems: "center" }}>
               개별주 {positions.filter((p) => !["SPY", "QQQ"].includes(p.instrument.ticker ?? "")).length}
-              /{portfolio.riskLimits.maxHoldings}
+              /{maxHoldings}
               <Tooltip text="지수 ETF를 뺀 개별 주식 보유 수입니다. 한도를 넘는 신규 편입은 자동으로 막힙니다." />
             </span>
           )}

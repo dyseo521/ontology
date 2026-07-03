@@ -30,7 +30,7 @@ export interface PositionView {
 export interface PortfolioDoc {
   portfolio: {
     portfolioId: string; name: string; baseCurrency: string; benchmark?: string;
-    riskLimits?: { maxWeightPerName?: number; maxVar95?: number; maxSectorWeight?: number };
+    riskLimits?: { maxWeightPerName?: number; maxVar95?: number; maxSectorWeight?: number; maxHoldings?: number };
     totalValueBase?: number; dailyPnlBase?: number;
   };
   positions: PositionView[];
