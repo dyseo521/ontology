@@ -32,6 +32,8 @@ submissionCriteria:
     failureMessage: "최소 1개의 leg가 필요합니다."
   - condition: "all_instruments_exist(params.legs)"
     failureMessage: "legs에 유니버스에 없는 종목이 포함되어 있습니다."
+  - condition: "all_legs_tradable(params.legs)"
+    failureMessage: "지수·지표용 종목은 제안에 포함할 수 없습니다."
   - condition: "abs_weight_delta_sum(params.legs) <= 0.5"
     failureMessage: "한 번의 제안에서 총 비중 변화 절대값 합이 50%p를 넘을 수 없습니다."
 rules:

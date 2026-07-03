@@ -28,6 +28,7 @@ properties:
       maxWeightPerName: {type: double}
       maxVar95: {type: double, description: "1일 VaR95 한도 (포트폴리오 가치 대비 비율)"}
       maxSectorWeight: {type: double}
+      maxHoldings: {type: integer, nullable: true, description: "개별 주식 최대 보유 종목 수 (ETF 제외)"}
   totalValueBase:
     type: double
     nullable: true

@@ -42,17 +42,20 @@ INITIAL_MODEL_VERSIONS = [
     },
 ]
 
-# v2: 삼성전자/SK하이닉스 제외(과적합 우려), 11개 섹터 분산. 신규 종목 avgCostLocal 은
-# 가격 수집 전이라 null — 첫 compute 후 set_position_costs() 로 근사 채움 (P6).
+# v3: 개별 주식 최대 15종목(maxHoldings, ETF 제외). 코스피 지수(069500)는 거래 불가라
+# 포트폴리오에서 제외. 삼성전자/SK하이닉스는 비보유(매수 후보로는 가능).
+# 비보유 tradable 종목들이 '폭넓은 제안'의 신규 편입 후보 풀이 된다.
 DEFAULT_PORTFOLIO = {
     "portfolio": {
         "portfolioId": "main",
         "name": "KR+US 섹터 분산 포트폴리오",
         "baseCurrency": "KRW",
         "benchmark": "ARCA:SPY",
-        "riskLimits": {"maxWeightPerName": 0.15, "maxVar95": 0.03, "maxSectorWeight": 0.30},
+        "riskLimits": {"maxWeightPerName": 0.15, "maxVar95": 0.03,
+                       "maxSectorWeight": 0.30, "maxHoldings": 15},
     },
     "positions": [
+        # ── KR 개별주 9 ──
         {"instrumentId": "KRX:035420", "quantity": 40, "avgCostLocal": 196000, "openedAt": "2025-02-14"},
         {"instrumentId": "KRX:035720", "quantity": 100, "avgCostLocal": 47500, "openedAt": "2025-04-08"},
         {"instrumentId": "KRX:005380", "quantity": 30, "avgCostLocal": 232000, "openedAt": "2025-06-20"},
@@ -62,21 +65,16 @@ DEFAULT_PORTFOLIO = {
         {"instrumentId": "KRX:096770", "quantity": 60, "avgCostLocal": None, "openedAt": "2026-07-03"},
         {"instrumentId": "KRX:015760", "quantity": 250, "avgCostLocal": None, "openedAt": "2026-07-03"},
         {"instrumentId": "KRX:271560", "quantity": 60, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "KRX:064350", "quantity": 60, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "KRX:069500", "quantity": 250, "avgCostLocal": 35800, "openedAt": "2025-01-06"},
+        # ── US 개별주 6 ──
         {"instrumentId": "XNAS:AAPL", "quantity": 20, "avgCostLocal": 186.5, "openedAt": "2025-02-03"},
         {"instrumentId": "XNAS:MSFT", "quantity": 10, "avgCostLocal": 392.0, "openedAt": "2025-03-17"},
         {"instrumentId": "XNAS:NVDA", "quantity": 15, "avgCostLocal": 114.0, "openedAt": "2025-05-27"},
         {"instrumentId": "XNAS:GOOGL", "quantity": 15, "avgCostLocal": 161.0, "openedAt": "2025-04-21"},
-        {"instrumentId": "XNAS:TSLA", "quantity": 8, "avgCostLocal": 228.0, "openedAt": "2025-06-09"},
         {"instrumentId": "XNYS:JPM", "quantity": 12, "avgCostLocal": 197.5, "openedAt": "2025-01-27"},
         {"instrumentId": "XNYS:JNJ", "quantity": 15, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "XNYS:XOM", "quantity": 15, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "XNYS:PG", "quantity": 12, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "XNYS:CAT", "quantity": 8, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "XNYS:NEE", "quantity": 20, "avgCostLocal": None, "openedAt": "2026-07-03"},
-        {"instrumentId": "ARCA:SPY", "quantity": 8, "avgCostLocal": 522.0, "openedAt": "2025-01-06"},
-        {"instrumentId": "XNAS:QQQ", "quantity": 6, "avgCostLocal": 448.0, "openedAt": "2025-02-24"},
+        # ── 지수 ETF (maxHoldings 미포함) ──
+        {"instrumentId": "ARCA:SPY", "quantity": 10, "avgCostLocal": 522.0, "openedAt": "2025-01-06"},
+        {"instrumentId": "XNAS:QQQ", "quantity": 8, "avgCostLocal": 448.0, "openedAt": "2025-02-24"},
     ],
 }
 
@@ -86,6 +84,8 @@ def run(force_portfolio: bool = False) -> None:
     store = OntologyStore()
 
     store.replace_objects("source", "Sector", universe.get("sectors", []))
+    for inst in universe["instruments"]:
+        inst.setdefault("tradable", True)  # 명시 없으면 매매 가능
     store.replace_objects("source", "Instrument", universe["instruments"])
     store.replace_objects("source", "Factor", universe["factors"])
     from ontoquant.core.store import LinkRecord

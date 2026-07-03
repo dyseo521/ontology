@@ -152,6 +152,7 @@ export interface Instrument {
   dartCorpCode?: string;
   secCik?: string;
   priceSource: "NAVER" | "TIINGO" | "YFINANCE";
+  tradable?: boolean;
 }
 
 /** 매크로 이벤트 — FRED 시리즈 급변동 (|z|>=2, 252d). Event 인터페이스 구현. */
@@ -207,7 +208,7 @@ export interface Portfolio {
   name: string;
   baseCurrency: "KRW" | "USD";
   benchmark?: string;
-  riskLimits: { maxWeightPerName: number; maxVar95: number; maxSectorWeight: number };
+  riskLimits: { maxWeightPerName: number; maxVar95: number; maxSectorWeight: number; maxHoldings?: number };
   totalValueBase?: number;
   dailyPnlBase?: number;
 }

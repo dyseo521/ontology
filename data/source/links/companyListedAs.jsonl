@@ -21,3 +21,10 @@
 {"fromType":"Company","from":"US:0000753308","toType":"Instrument","to":"XNYS:NEE"}
 {"fromType":"Company","from":"US:0000080424","toType":"Instrument","to":"XNYS:PG"}
 {"fromType":"Company","from":"US:0000034088","toType":"Instrument","to":"XNYS:XOM"}
+{"fromType":"Company","from":"KR:00106641","toType":"Instrument","to":"KRX:000270"}
+{"fromType":"Company","from":"KR:00159616","toType":"Instrument","to":"KRX:034020"}
+{"fromType":"Company","from":"KR:00382199","toType":"Instrument","to":"KRX:055550"}
+{"fromType":"Company","from":"KR:00635134","toType":"Instrument","to":"KRX:097950"}
+{"fromType":"Company","from":"KR:00877059","toType":"Instrument","to":"KRX:207940"}
+{"fromType":"Company","from":"KR:00760971","toType":"Instrument","to":"KRX:259960"}
+{"fromType":"Company","from":"KR:01515323","toType":"Instrument","to":"KRX:373220"}

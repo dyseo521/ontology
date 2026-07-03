@@ -118,6 +118,8 @@ class ActionEngine:
             "passed_wf_count": lambda model_id: af.passed_wf_count_helper(self.store, model_id),
             "all_instruments_exist": lambda legs: af.all_instruments_exist(self.store, legs),
             "abs_weight_delta_sum": af.abs_weight_delta_sum,
+            "all_legs_tradable": lambda legs: af.all_legs_tradable(self.store, legs),
+            "within_holdings_limit": lambda inst, qty: af.within_holdings_limit(self.store, inst, qty),
         }
 
     def _eval(self, expr: str, ctx: dict) -> Any:

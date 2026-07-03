@@ -9,8 +9,49 @@ from __future__ import annotations
 from ontoquant.core.actions import ActionEngine
 from ontoquant.core.store import OntologyStore
 
-PROXY_ORDER = ["KRX:069500", "ARCA:SPY", "XNAS:QQQ"]  # 감축분 이동 대상 (지수 ETF, 한도 여유 내 배분)
 HEADROOM_BUFFER = 0.005
+NEW_ENTRY_CAP = 0.04       # 신규 편입 1종목당 최대 비중
+MAX_NEW_ENTRIES = 2        # 제안당 신규 편입 종목 수 상한
+
+
+def diversification_candidates(store: OntologyStore, max_w: float,
+                               weights: dict[str, float]) -> list[tuple[str, float, str]]:
+    """감축분을 받을 매수 후보: 지수 ETF + 비보유 저베타 개별주 (폭넓은 제안).
+
+    - 거래 가능(tradable) 종목만
+    - 개별주 신규 편입은 maxHoldings 여유 내에서만, 종목당 NEW_ENTRY_CAP 까지
+    """
+    from ontoquant.core.action_functions import _max_holdings, equity_holdings, is_tradable
+
+    cands: list[tuple[str, float, str]] = []
+    for etf in ("ARCA:SPY", "XNAS:QQQ"):
+        if not is_tradable(store, etf):
+            continue
+        headroom = max_w - weights.get(etf, 0.0) - HEADROOM_BUFFER
+        if headroom > 0.005:
+            cands.append((etf, round(headroom, 4), "지수 ETF 분산"))
+
+    held = equity_holdings(store)
+    cap = _max_holdings(store)
+    slots = max(0, (cap if cap is not None else 99) - len(held))
+    if slots > 0:
+        betas: dict[str, float] = {}
+        for e in store.query("FactorExposure"):
+            if e["factorId"] in ("KR:MKT", "FF:MKT"):
+                betas[e["instrumentId"]] = float(e["beta"])
+        pool = [
+            i for i in store.query("Instrument", where={"assetClass": "EQUITY"})
+            if i.get("tradable", True) is not False
+            and i["instrumentId"] not in held
+            and i["instrumentId"] in betas
+        ]
+        pool.sort(key=lambda i: abs(betas[i["instrumentId"]]))
+        for inst in pool[: min(slots, MAX_NEW_ENTRIES)]:
+            iid = inst["instrumentId"]
+            label = inst.get("nameKo") or inst["name"]
+            cands.append((iid, NEW_ENTRY_CAP,
+                          f"신규 편입: {label} (시장 민감도 {betas[iid]:+.2f})"))
+    return cands
 
 
 def build_reduction_legs(store: OntologyStore) -> tuple[list[dict], list[str], str]:
@@ -41,21 +82,17 @@ def build_reduction_legs(store: OntologyStore) -> tuple[list[dict], list[str], s
     for ins in store.query("Insight", where={"insightType": "LIMIT_BREACH"}):
         insight_ids.append(ins["insightId"])
     if legs and freed > 0.005 and max_w:
-        # 감축분을 지수 ETF 들에 한도 여유(headroom) 내로 배분 — 새 위반을 만들지 않는다
+        # 감축분을 매수 후보(지수 ETF + 비보유 저베타 종목)에 배분 — 새 위반을 만들지 않는다
         weights = {p["instrumentId"]: float(p.get("weight") or 0.0) for p in store.query("Position")}
         remaining = freed
-        for proxy in PROXY_ORDER:
+        for iid, headroom, reason in diversification_candidates(store, max_w, weights):
             if remaining <= 0.001:
                 break
-            headroom = max_w - weights.get(proxy, 0.0) - HEADROOM_BUFFER
-            alloc = round(min(remaining, max(0.0, headroom)), 4)
+            alloc = round(min(remaining, headroom), 4)
             if alloc <= 0.001:
                 continue
-            legs.append({
-                "instrumentId": proxy, "side": "BUY",
-                "targetWeightDelta": alloc,
-                "reason": f"감축분 분산 (한도 여유 {headroom * 100:.1f}%p 내)",
-            })
+            legs.append({"instrumentId": iid, "side": "BUY",
+                         "targetWeightDelta": alloc, "reason": reason})
             remaining = round(remaining - alloc, 4)
         # 잔여분은 현금 보유 (leg 없음 = 현금)
     rationale = (f"리스크 한도 위반 해소: {', '.join(reasons)} 종목을 한도까지 감축하고 "

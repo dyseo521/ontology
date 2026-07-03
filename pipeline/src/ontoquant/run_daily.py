@@ -105,9 +105,15 @@ def stage_proposals(statuses: dict) -> None:
 
 
 def stage_export(statuses: dict) -> None:
+    from ontoquant import quality
     from ontoquant.export import artifacts
 
     store = OntologyStore().build()
+    try:
+        q = quality.run(store, verbose=False)
+        statuses["quality"] = q["summary"]
+    except Exception as exc:  # noqa: BLE001
+        statuses["quality"] = {"status": f"failed: {exc}"}
     statuses["export"] = artifacts.export_all(store, statuses)
 
 

@@ -215,7 +215,16 @@ export default function HomePage() {
 
       {/* 포지션 테이블 */}
       <section className="section">
-        <h2 className="headline" style={{ marginBottom: 20 }}>보유 종목 {positions.length}</h2>
+        <div className="flex-between" style={{ marginBottom: 20 }}>
+          <h2 className="headline">보유 종목 {positions.length}</h2>
+          {portfolio.riskLimits?.maxHoldings != null && (
+            <span className="caption" style={{ display: "inline-flex", alignItems: "center" }}>
+              개별주 {positions.filter((p) => !["SPY", "QQQ"].includes(p.instrument.ticker ?? "")).length}
+              /{portfolio.riskLimits.maxHoldings}
+              <Tooltip text="지수 ETF를 뺀 개별 주식 보유 수입니다. 한도를 넘는 신규 편입은 자동으로 막힙니다." />
+            </span>
+          )}
+        </div>
         <div className="table-scroll">
           <table className="data-table">
             <thead>

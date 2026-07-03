@@ -7,7 +7,8 @@
     "riskLimits": {
       "maxWeightPerName": 0.15,
       "maxVar95": 0.03,
-      "maxSectorWeight": 0.3
+      "maxSectorWeight": 0.3,
+      "maxHoldings": 15
     }
   },
   "positions": [
@@ -66,18 +67,6 @@
       "openedAt": "2026-07-03"
     },
     {
-      "instrumentId": "KRX:064350",
-      "quantity": 60,
-      "avgCostLocal": 200500.0,
-      "openedAt": "2026-07-03"
-    },
-    {
-      "instrumentId": "KRX:069500",
-      "quantity": 250,
-      "avgCostLocal": 35800,
-      "openedAt": "2025-01-06"
-    },
-    {
       "instrumentId": "XNAS:AAPL",
       "quantity": 20,
       "avgCostLocal": 186.5,
@@ -102,12 +91,6 @@
       "openedAt": "2025-04-21"
     },
     {
-      "instrumentId": "XNAS:TSLA",
-      "quantity": 8,
-      "avgCostLocal": 228.0,
-      "openedAt": "2025-06-09"
-    },
-    {
       "instrumentId": "XNYS:JPM",
       "quantity": 12,
       "avgCostLocal": 197.5,
@@ -120,38 +103,14 @@
       "openedAt": "2026-07-03"
     },
     {
-      "instrumentId": "XNYS:XOM",
-      "quantity": 15,
-      "avgCostLocal": 137.09,
-      "openedAt": "2026-07-03"
-    },
-    {
-      "instrumentId": "XNYS:PG",
-      "quantity": 12,
-      "avgCostLocal": 151.41,
-      "openedAt": "2026-07-03"
-    },
-    {
-      "instrumentId": "XNYS:CAT",
-      "quantity": 8,
-      "avgCostLocal": 963.53,
-      "openedAt": "2026-07-03"
-    },
-    {
-      "instrumentId": "XNYS:NEE",
-      "quantity": 20,
-      "avgCostLocal": 88.34,
-      "openedAt": "2026-07-03"
-    },
-    {
       "instrumentId": "ARCA:SPY",
-      "quantity": 8,
+      "quantity": 10,
       "avgCostLocal": 522.0,
       "openedAt": "2025-01-06"
     },
     {
       "instrumentId": "XNAS:QQQ",
-      "quantity": 6,
+      "quantity": 8,
       "avgCostLocal": 448.0,
       "openedAt": "2025-02-24"
     }

@@ -30,6 +30,10 @@ submissionCriteria:
     failureMessage: "수량은 음수가 될 수 없습니다 (공매도 미지원)."
   - condition: "instrument != None"
     failureMessage: "유니버스에 없는 종목입니다. 먼저 Instrument를 등록하세요."
+  - condition: "instrument == None or instrument.tradable != False"
+    failureMessage: "지수·지표용 종목은 매매할 수 없습니다."
+  - condition: "within_holdings_limit(instrument, params.quantity)"
+    failureMessage: "개별 주식 보유 한도(maxHoldings)를 초과합니다. 기존 종목을 먼저 정리하세요."
 rules:
   - type: functionRule
     function: apply_position_edit

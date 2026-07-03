@@ -43,6 +43,10 @@ properties:
   priceSource:
     type: string
     enum: [NAVER, TIINGO, YFINANCE]
+  tradable:
+    type: boolean
+    nullable: true
+    description: "false = 지수/지표용 (매수·매도·보유 불가, 데이터·팩터로만 사용). 기본 true"
 timeSeriesProperties:
   price:
     frequency: daily

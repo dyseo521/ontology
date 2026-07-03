@@ -53,6 +53,60 @@ def apply_legs_to_weights(weights: dict[str, float], legs: list[dict]) -> dict[s
     return out
 
 
+def is_tradable(store: OntologyStore, instrument_id: str) -> bool:
+    inst = store.get("Instrument", instrument_id)
+    return bool(inst) and inst.get("tradable", True) is not False
+
+
+def all_legs_tradable(store: OntologyStore, legs) -> bool:
+    return all(is_tradable(store, l.get("instrumentId", "")) for l in (legs or []))
+
+
+def equity_holdings(store: OntologyStore) -> set[str]:
+    """개별 주식(EQUITY) 보유 종목 집합 (ETF 제외, 수량 > 0)."""
+    held = set()
+    for p in store.query("Position"):
+        if not p.get("quantity"):
+            continue
+        inst = store.get("Instrument", p["instrumentId"])
+        if inst and inst.get("assetClass") == "EQUITY":
+            held.add(p["instrumentId"])
+    return held
+
+
+def _max_holdings(store: OntologyStore) -> int | None:
+    limits = (store.query("Portfolio")[0].get("riskLimits") or {})
+    return limits.get("maxHoldings")
+
+
+def within_holdings_limit(store: OntologyStore, instrument, quantity) -> bool:
+    """editPosition 용: 신규 편입이 개별주 한도를 넘지 않는가."""
+    inst = _raw(instrument)
+    if not inst or float(quantity or 0) <= 0 or inst.get("assetClass") != "EQUITY":
+        return True
+    held = equity_holdings(store)
+    if inst.get("instrumentId") in held:
+        return True  # 기존 보유 수량 변경
+    cap = _max_holdings(store)
+    return cap is None or len(held) < cap
+
+
+def legs_within_holdings_limit(store: OntologyStore, legs) -> bool:
+    """제안 legs 적용 후 개별주 보유 수가 한도 이내인가 (신규 BUY 편입 포함)."""
+    held = equity_holdings(store)
+    result = set(held)
+    for l in (legs or []):
+        iid = l.get("instrumentId")
+        inst = store.get("Instrument", iid)
+        if not inst or inst.get("assetClass") != "EQUITY":
+            continue
+        delta = float(l.get("targetWeightDelta", 0))
+        if delta > 0:
+            result.add(iid)
+    cap = _max_holdings(store)
+    return cap is None or len(result) <= cap
+
+
 def would_breach_limits(store: OntologyStore, proposal) -> bool:
     """제안 적용 시 비중/VaR 한도 위반 여부 (승인 차단용)."""
     p = _raw(proposal)
@@ -73,6 +127,11 @@ def would_breach_limits(store: OntologyStore, proposal) -> bool:
             "RiskMetric", where={"metricType": "VAR_95_1D", "scopeType": "PORTFOLIO"})), None)
         if cur_var is not None and cur_var + exp["var95Delta"] > max_var * 1.25:
             return True
+    # 거래 불가 종목 leg / 개별주 보유 수 한도
+    if not all_legs_tradable(store, p.get("legs")):
+        return True
+    if not legs_within_holdings_limit(store, p.get("legs")):
+        return True
     return False
 
 

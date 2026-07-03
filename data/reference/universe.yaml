@@ -41,8 +41,23 @@ instruments:
      market: KRX, currency: KRW, assetClass: EQUITY, sectorId: CS, priceSource: NAVER}
   - {instrumentId: "KRX:064350", ticker: "064350", name: Hyundai Rotem, nameKo: 현대로템,
      market: KRX, currency: KRW, assetClass: EQUITY, sectorId: IND, priceSource: NAVER}
-  - {instrumentId: "KRX:069500", ticker: "069500", name: KODEX 200, nameKo: KODEX 200,
-     market: KRX, currency: KRW, assetClass: ETF, sectorId: BROAD, priceSource: NAVER}
+  - {instrumentId: "KRX:069500", ticker: "069500", name: KODEX 200, nameKo: 코스피 지수(프록시),
+     market: KRX, currency: KRW, assetClass: ETF, sectorId: BROAD, priceSource: NAVER,
+     tradable: false}  # 코스피 지수는 매수/매도 불가 — 팩터·데이터 용도로만
+  - {instrumentId: "KRX:207940", ticker: "207940", name: Samsung Biologics, nameKo: 삼성바이오로직스,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: HC, priceSource: NAVER}
+  - {instrumentId: "KRX:373220", ticker: "373220", name: LG Energy Solution, nameKo: LG에너지솔루션,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: MAT, priceSource: NAVER}
+  - {instrumentId: "KRX:000270", ticker: "000270", name: Kia, nameKo: 기아,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: CD, priceSource: NAVER}
+  - {instrumentId: "KRX:055550", ticker: "055550", name: Shinhan Financial Group, nameKo: 신한지주,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: FIN, priceSource: NAVER}
+  - {instrumentId: "KRX:034020", ticker: "034020", name: Doosan Enerbility, nameKo: 두산에너빌리티,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: IND, priceSource: NAVER}
+  - {instrumentId: "KRX:259960", ticker: "259960", name: Krafton, nameKo: 크래프톤,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: COMM, priceSource: NAVER}
+  - {instrumentId: "KRX:097950", ticker: "097950", name: CJ CheilJedang, nameKo: CJ제일제당,
+     market: KRX, currency: KRW, assetClass: EQUITY, sectorId: CS, priceSource: NAVER}
   # ── US (13) ─────────────────────────────────────────
   - {instrumentId: "XNAS:AAPL", ticker: AAPL, name: Apple Inc., nameKo: 애플,
      market: XNAS, currency: USD, assetClass: EQUITY, sectorId: IT, secCik: "0000320193", priceSource: TIINGO}

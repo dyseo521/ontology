@@ -287,11 +287,18 @@ def export_all(store: OntologyStore, statuses: dict | None = None) -> dict:
         for m in models
     ])
 
-    # meta.json
+    # meta.json (+ 데이터 품질 요약)
+    quality_path = config.COMPUTED_DIR / "quality.json"
+    quality_summary = None
+    if quality_path.exists():
+        q = json.loads(quality_path.read_text(encoding="utf-8"))
+        quality_summary = {"asOf": q.get("asOf"), **q.get("summary", {}),
+                           "flags": q.get("flags", [])[:10]}
     _write(out / "meta.json", {
         "asOf": as_of,
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sources": statuses or {},
         "counts": {t: store.count(t) for t in sorted(store.schema.objectTypes)},
+        "dataQuality": quality_summary,
     })
     return {"asOf": as_of, "exported": True}

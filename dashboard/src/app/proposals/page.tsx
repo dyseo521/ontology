@@ -1,13 +1,14 @@
 import { StatusBadge } from "@/components/Badge";
 import Tooltip from "@/components/Tooltip";
 import BacktestChart from "./BacktestChart";
-import { loadBacktest, loadProposals } from "@/lib/data";
+import { loadBacktest, loadPortfolio, loadProposals } from "@/lib/data";
 import { fmtDateTime, fmtPct } from "@/lib/format";
 
 const SIDE_LABEL: Record<string, string> = { BUY: "매수", SELL: "매도", HOLD: "보유" };
 
 export default function ProposalsPage() {
   const proposals = loadProposals();
+  const held = new Set(loadPortfolio().positions.filter((p) => p.quantity > 0).map((p) => p.instrumentId));
   return (
     <div className="container">
       <section className="section-sm" style={{ marginTop: 48 }}>
@@ -59,7 +60,16 @@ export default function ProposalsPage() {
                     <tbody>
                       {p.legs.map((leg, i) => (
                         <tr key={i}>
-                          <td className="body-sm">{leg.instrumentId}</td>
+                          <td className="body-sm">
+                            {leg.instrumentId}
+                            {!held.has(leg.instrumentId) && leg.targetWeightDelta > 0 && (
+                              <span className="badge badge--stage" style={{
+                                marginLeft: 8, background: "var(--block-lilac)", border: "none",
+                              }}>
+                                신규 편입
+                              </span>
+                            )}
+                          </td>
                           <td>
                             <span className="badge badge--stage" style={{
                               background: leg.side === "BUY" ? "var(--block-mint)"
