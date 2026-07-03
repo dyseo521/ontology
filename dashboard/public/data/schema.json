@@ -1,6 +1,17 @@
 {
   "objectTypes": [
     {
+      "apiName": "Company",
+      "displayName": "기업",
+      "description": "상장사의 실체 정보 (DART 기업개황 / SEC submissions). 종목과 분리된 기업 노드.",
+      "icon": "building",
+      "color": "block-cream",
+      "status": "ACTIVE",
+      "primaryKey": "companyId",
+      "titleProperty": "name",
+      "implements": []
+    },
+    {
       "apiName": "Decision",
       "displayName": "결정",
       "description": "사람이 내린 결정의 캡처 (추천 스냅샷 + 근거 + 결정). append-only, writeback 계층.",
@@ -68,6 +79,17 @@
       "status": "ACTIVE",
       "primaryKey": "exposureId",
       "titleProperty": "exposureId",
+      "implements": []
+    },
+    {
+      "apiName": "Fundamental",
+      "displayName": "분기 재무",
+      "description": "분기 주요 계정 (DART 전체 재무제표 / SEC companyfacts). 재무 인사이트의 원천.",
+      "icon": "file-spreadsheet",
+      "color": "surface-soft",
+      "status": "ACTIVE",
+      "primaryKey": "fundamentalId",
+      "titleProperty": "fundamentalId",
       "implements": []
     },
     {
@@ -185,6 +207,17 @@
       "primaryKey": "scenarioId",
       "titleProperty": "name",
       "implements": []
+    },
+    {
+      "apiName": "Sector",
+      "displayName": "섹터",
+      "description": "산업 섹터. 종목 분류와 섹터 단위 리스크/인사이트의 축.",
+      "icon": "grid",
+      "color": "block-lilac",
+      "status": "ACTIVE",
+      "primaryKey": "sectorId",
+      "titleProperty": "nameKo",
+      "implements": []
     }
   ],
   "interfaces": [
@@ -210,6 +243,13 @@
   ],
   "linkTypes": [
     {
+      "apiName": "companyListedAs",
+      "displayName": "상장 종목",
+      "from": "Company",
+      "to": "Instrument",
+      "cardinality": "ONE_TO_MANY"
+    },
+    {
       "apiName": "decisionOnProposal",
       "displayName": "결재 대상",
       "from": "Decision",
@@ -224,6 +264,13 @@
       "cardinality": "MANY_TO_MANY"
     },
     {
+      "apiName": "eventAffectsSector",
+      "displayName": "이벤트→섹터 영향",
+      "from": "Event",
+      "to": "Sector",
+      "cardinality": "MANY_TO_MANY"
+    },
+    {
       "apiName": "eventDrivesFactor",
       "displayName": "이벤트→팩터 영향",
       "from": "Event",
@@ -235,6 +282,13 @@
       "displayName": "대상 팩터",
       "from": "FactorExposure",
       "to": "Factor",
+      "cardinality": "MANY_TO_ONE"
+    },
+    {
+      "apiName": "fundamentalOfCompany",
+      "displayName": "재무 주체",
+      "from": "Fundamental",
+      "to": "Company",
       "cardinality": "MANY_TO_ONE"
     },
     {
@@ -257,6 +311,13 @@
       "from": "Instrument",
       "to": "FactorExposure",
       "cardinality": "ONE_TO_MANY"
+    },
+    {
+      "apiName": "instrumentInSector",
+      "displayName": "소속 섹터",
+      "from": "Instrument",
+      "to": "Sector",
+      "cardinality": "MANY_TO_ONE"
     },
     {
       "apiName": "metricScopePortfolio",

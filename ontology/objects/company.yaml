@@ -1,0 +1,51 @@
+apiName: Company
+displayName: 기업
+description: 상장사의 실체 정보 (DART 기업개황 / SEC submissions). 종목과 분리된 기업 노드.
+icon: building
+color: block-cream
+status: ACTIVE
+primaryKey: companyId
+titleProperty: name
+properties:
+  companyId:
+    type: string
+    description: "KR:{corp_code} 또는 US:{cik}"
+  name:
+    type: string
+  nameKo:
+    type: string
+    nullable: true
+  market:
+    type: string
+    enum: [KR, US]
+  corpCode:
+    type: string
+    nullable: true
+  cik:
+    type: string
+    nullable: true
+  ceo:
+    type: string
+    nullable: true
+    owner: PIPELINE
+  industryCode:
+    type: string
+    nullable: true
+    owner: PIPELINE
+    description: "DART induty_code 또는 SEC SIC"
+  industryName:
+    type: string
+    nullable: true
+    owner: PIPELINE
+  foundedDate:
+    type: date
+    nullable: true
+    owner: PIPELINE
+  homepage:
+    type: string
+    nullable: true
+    owner: PIPELINE
+  updatedAt:
+    type: timestamp
+    nullable: true
+    owner: PIPELINE

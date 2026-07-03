@@ -1,0 +1,11 @@
+{"sectorId":"BROAD","name":"Broad Market","nameKo":"시장지수","colorToken":"block-navy"}
+{"sectorId":"CD","name":"Consumer Discretionary","nameKo":"경기소비재","colorToken":"block-coral"}
+{"sectorId":"COMM","name":"Communication Services","nameKo":"커뮤니케이션","colorToken":"block-pink"}
+{"sectorId":"CS","name":"Consumer Staples","nameKo":"필수소비재","colorToken":"block-cream"}
+{"sectorId":"ENE","name":"Energy","nameKo":"에너지","colorToken":"block-coral"}
+{"sectorId":"FIN","name":"Financials","nameKo":"금융","colorToken":"block-lime"}
+{"sectorId":"HC","name":"Health Care","nameKo":"헬스케어","colorToken":"block-mint"}
+{"sectorId":"IND","name":"Industrials","nameKo":"산업재","colorToken":"block-cream"}
+{"sectorId":"IT","name":"Information Technology","nameKo":"정보기술","colorToken":"block-lilac"}
+{"sectorId":"MAT","name":"Materials","nameKo":"소재","colorToken":"block-lilac"}
+{"sectorId":"UTIL","name":"Utilities","nameKo":"유틸리티","colorToken":"block-pink"}

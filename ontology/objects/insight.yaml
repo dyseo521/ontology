@@ -11,7 +11,21 @@ properties:
     type: string
   insightType:
     type: string
-    enum: [EVENT_IMPACT, LIMIT_BREACH, EXPOSURE_SHIFT, CONCENTRATION, FACTOR_MOVE]
+    enum: [EVENT_IMPACT, LIMIT_BREACH, EXPOSURE_SHIFT, CONCENTRATION, FACTOR_MOVE,
+           SECTOR_CONCENTRATION, SECTOR_EVENT_CLUSTER, CASH_ALLOCATION,
+           NEWS_SENTIMENT_SHIFT, FUNDAMENTAL_SHIFT]
+  sectorId:
+    type: string
+    nullable: true
+    description: "섹터 스코프 인사이트인 경우"
+  recommendedAction:
+    type: struct
+    nullable: true
+    description: "권장 대응 (대시보드 표시 + MCP 실행 프리셋)"
+    fields:
+      label: {type: string, description: "예: 'IT 비중 5%p 줄이기'"}
+      actionApiName: {type: string, nullable: true}
+      paramsPreset: {type: json, nullable: true}
   title:
     type: string
   narrative:

@@ -54,8 +54,8 @@ def export_graph(store: OntologyStore) -> dict:
     for inst in store.query("Instrument"):
         nodes.append(_node("Instrument", inst["instrumentId"],
                            inst.get("nameKo") or inst["name"], {
-            "ticker": inst["ticker"], "market": inst["market"], "sector": inst.get("sector"),
-            "currency": inst["currency"],
+            "ticker": inst["ticker"], "market": inst["market"],
+            "sectorId": inst.get("sectorId"), "currency": inst["currency"],
         }))
     used_factors = set()
     for exp in store.query("FactorExposure"):
@@ -108,14 +108,19 @@ def export_all(store: OntologyStore, statuses: dict | None = None) -> dict:
     instruments = {i["instrumentId"]: i for i in store.query("Instrument")}
     as_of = None
 
+    sectors = {s["sectorId"]: s for s in store.query("Sector")}
+
     # portfolio.json — 병합 완료된 최종 뷰
     pos_view = []
     for pos in sorted(positions, key=lambda p: -(p.get("marketValueBase") or 0)):
         inst = instruments.get(pos["instrumentId"], {})
+        sec = sectors.get(inst.get("sectorId") or "", {})
         pos_view.append({**pos, "instrument": {
             "name": inst.get("name"), "nameKo": inst.get("nameKo"),
             "ticker": inst.get("ticker"), "market": inst.get("market"),
-            "sector": inst.get("sector"), "currency": inst.get("currency"),
+            "sectorId": inst.get("sectorId"),
+            "sector": sec.get("nameKo") or inst.get("sectorId"),
+            "currency": inst.get("currency"),
         }})
     _write(out / "portfolio.json", {"portfolio": portfolio, "positions": pos_view})
 

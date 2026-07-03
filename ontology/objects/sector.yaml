@@ -1,0 +1,20 @@
+apiName: Sector
+displayName: 섹터
+description: 산업 섹터. 종목 분류와 섹터 단위 리스크/인사이트의 축.
+icon: grid
+color: block-lilac
+status: ACTIVE
+primaryKey: sectorId
+titleProperty: nameKo
+properties:
+  sectorId:
+    type: string
+    description: "예: IT, FIN, HC"
+  name:
+    type: string
+  nameKo:
+    type: string
+  colorToken:
+    type: string
+    nullable: true
+    description: "대시보드 파스텔 토큰 (block-*)"

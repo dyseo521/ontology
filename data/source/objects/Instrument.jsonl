@@ -1,15 +1,26 @@
-{"instrumentId":"ARCA:SPY","ticker":"SPY","name":"SPDR S&P 500 ETF","nameKo":"SPY","market":"ARCA","currency":"USD","assetClass":"ETF","sector":"Broad Market","priceSource":"TIINGO"}
-{"instrumentId":"KRX:000660","ticker":"000660","name":"SK hynix","nameKo":"SK하이닉스","market":"KRX","currency":"KRW","assetClass":"EQUITY","sector":"Information Technology","priceSource":"NAVER","dartCorpCode":"00164779"}
-{"instrumentId":"KRX:005380","ticker":"005380","name":"Hyundai Motor","nameKo":"현대차","market":"KRX","currency":"KRW","assetClass":"EQUITY","sector":"Consumer Discretionary","priceSource":"NAVER","dartCorpCode":"00164742"}
-{"instrumentId":"KRX:005930","ticker":"005930","name":"Samsung Electronics","nameKo":"삼성전자","market":"KRX","currency":"KRW","assetClass":"EQUITY","sector":"Information Technology","priceSource":"NAVER","dartCorpCode":"00126380"}
-{"instrumentId":"KRX:035420","ticker":"035420","name":"NAVER","nameKo":"네이버","market":"KRX","currency":"KRW","assetClass":"EQUITY","sector":"Communication Services","priceSource":"NAVER","dartCorpCode":"00266961"}
-{"instrumentId":"KRX:035720","ticker":"035720","name":"Kakao","nameKo":"카카오","market":"KRX","currency":"KRW","assetClass":"EQUITY","sector":"Communication Services","priceSource":"NAVER","dartCorpCode":"00258801"}
-{"instrumentId":"KRX:068270","ticker":"068270","name":"Celltrion","nameKo":"셀트리온","market":"KRX","currency":"KRW","assetClass":"EQUITY","sector":"Health Care","priceSource":"NAVER","dartCorpCode":"00413046"}
-{"instrumentId":"KRX:069500","ticker":"069500","name":"KODEX 200","nameKo":"KODEX 200","market":"KRX","currency":"KRW","assetClass":"ETF","sector":"Broad Market","priceSource":"NAVER"}
-{"instrumentId":"XNAS:AAPL","ticker":"AAPL","name":"Apple Inc.","nameKo":"애플","market":"XNAS","currency":"USD","assetClass":"EQUITY","sector":"Information Technology","secCik":"0000320193","priceSource":"TIINGO"}
-{"instrumentId":"XNAS:GOOGL","ticker":"GOOGL","name":"Alphabet Inc. (A)","nameKo":"알파벳","market":"XNAS","currency":"USD","assetClass":"EQUITY","sector":"Communication Services","secCik":"0001652044","priceSource":"TIINGO"}
-{"instrumentId":"XNAS:MSFT","ticker":"MSFT","name":"Microsoft Corp.","nameKo":"마이크로소프트","market":"XNAS","currency":"USD","assetClass":"EQUITY","sector":"Information Technology","secCik":"0000789019","priceSource":"TIINGO"}
-{"instrumentId":"XNAS:NVDA","ticker":"NVDA","name":"NVIDIA Corp.","nameKo":"엔비디아","market":"XNAS","currency":"USD","assetClass":"EQUITY","sector":"Information Technology","secCik":"0001045810","priceSource":"TIINGO"}
-{"instrumentId":"XNAS:QQQ","ticker":"QQQ","name":"Invesco QQQ Trust","nameKo":"QQQ","market":"XNAS","currency":"USD","assetClass":"ETF","sector":"Information Technology","priceSource":"TIINGO"}
-{"instrumentId":"XNAS:TSLA","ticker":"TSLA","name":"Tesla Inc.","nameKo":"테슬라","market":"XNAS","currency":"USD","assetClass":"EQUITY","sector":"Consumer Discretionary","secCik":"0001318605","priceSource":"TIINGO"}
-{"instrumentId":"XNYS:JPM","ticker":"JPM","name":"JPMorgan Chase & Co.","nameKo":"JP모간","market":"XNYS","currency":"USD","assetClass":"EQUITY","sector":"Financials","secCik":"0000019617","priceSource":"TIINGO"}
+{"instrumentId":"ARCA:SPY","ticker":"SPY","name":"SPDR S&P 500 ETF","nameKo":"SPY","market":"ARCA","currency":"USD","assetClass":"ETF","sectorId":"BROAD","priceSource":"TIINGO"}
+{"instrumentId":"KRX:000660","ticker":"000660","name":"SK hynix","nameKo":"SK하이닉스","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"IT","priceSource":"NAVER"}
+{"instrumentId":"KRX:005380","ticker":"005380","name":"Hyundai Motor","nameKo":"현대차","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"CD","priceSource":"NAVER"}
+{"instrumentId":"KRX:005490","ticker":"005490","name":"POSCO Holdings","nameKo":"POSCO홀딩스","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"MAT","priceSource":"NAVER"}
+{"instrumentId":"KRX:005930","ticker":"005930","name":"Samsung Electronics","nameKo":"삼성전자","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"IT","priceSource":"NAVER"}
+{"instrumentId":"KRX:015760","ticker":"015760","name":"KEPCO","nameKo":"한국전력","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"UTIL","priceSource":"NAVER"}
+{"instrumentId":"KRX:035420","ticker":"035420","name":"NAVER","nameKo":"네이버","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"COMM","priceSource":"NAVER"}
+{"instrumentId":"KRX:035720","ticker":"035720","name":"Kakao","nameKo":"카카오","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"COMM","priceSource":"NAVER"}
+{"instrumentId":"KRX:064350","ticker":"064350","name":"Hyundai Rotem","nameKo":"현대로템","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"IND","priceSource":"NAVER"}
+{"instrumentId":"KRX:068270","ticker":"068270","name":"Celltrion","nameKo":"셀트리온","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"HC","priceSource":"NAVER"}
+{"instrumentId":"KRX:069500","ticker":"069500","name":"KODEX 200","nameKo":"KODEX 200","market":"KRX","currency":"KRW","assetClass":"ETF","sectorId":"BROAD","priceSource":"NAVER"}
+{"instrumentId":"KRX:096770","ticker":"096770","name":"SK Innovation","nameKo":"SK이노베이션","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"ENE","priceSource":"NAVER"}
+{"instrumentId":"KRX:105560","ticker":"105560","name":"KB Financial Group","nameKo":"KB금융","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"FIN","priceSource":"NAVER"}
+{"instrumentId":"KRX:271560","ticker":"271560","name":"Orion","nameKo":"오리온","market":"KRX","currency":"KRW","assetClass":"EQUITY","sectorId":"CS","priceSource":"NAVER"}
+{"instrumentId":"XNAS:AAPL","ticker":"AAPL","name":"Apple Inc.","nameKo":"애플","market":"XNAS","currency":"USD","assetClass":"EQUITY","sectorId":"IT","secCik":"0000320193","priceSource":"TIINGO"}
+{"instrumentId":"XNAS:GOOGL","ticker":"GOOGL","name":"Alphabet Inc. (A)","nameKo":"알파벳","market":"XNAS","currency":"USD","assetClass":"EQUITY","sectorId":"COMM","secCik":"0001652044","priceSource":"TIINGO"}
+{"instrumentId":"XNAS:MSFT","ticker":"MSFT","name":"Microsoft Corp.","nameKo":"마이크로소프트","market":"XNAS","currency":"USD","assetClass":"EQUITY","sectorId":"IT","secCik":"0000789019","priceSource":"TIINGO"}
+{"instrumentId":"XNAS:NVDA","ticker":"NVDA","name":"NVIDIA Corp.","nameKo":"엔비디아","market":"XNAS","currency":"USD","assetClass":"EQUITY","sectorId":"IT","secCik":"0001045810","priceSource":"TIINGO"}
+{"instrumentId":"XNAS:QQQ","ticker":"QQQ","name":"Invesco QQQ Trust","nameKo":"QQQ","market":"XNAS","currency":"USD","assetClass":"ETF","sectorId":"BROAD","priceSource":"TIINGO"}
+{"instrumentId":"XNAS:TSLA","ticker":"TSLA","name":"Tesla Inc.","nameKo":"테슬라","market":"XNAS","currency":"USD","assetClass":"EQUITY","sectorId":"CD","secCik":"0001318605","priceSource":"TIINGO"}
+{"instrumentId":"XNYS:CAT","ticker":"CAT","name":"Caterpillar Inc.","nameKo":"캐터필러","market":"XNYS","currency":"USD","assetClass":"EQUITY","sectorId":"IND","secCik":"0000018230","priceSource":"TIINGO"}
+{"instrumentId":"XNYS:JNJ","ticker":"JNJ","name":"Johnson & Johnson","nameKo":"존슨앤드존슨","market":"XNYS","currency":"USD","assetClass":"EQUITY","sectorId":"HC","secCik":"0000200406","priceSource":"TIINGO"}
+{"instrumentId":"XNYS:JPM","ticker":"JPM","name":"JPMorgan Chase & Co.","nameKo":"JP모간","market":"XNYS","currency":"USD","assetClass":"EQUITY","sectorId":"FIN","secCik":"0000019617","priceSource":"TIINGO"}
+{"instrumentId":"XNYS:NEE","ticker":"NEE","name":"NextEra Energy","nameKo":"넥스트에라","market":"XNYS","currency":"USD","assetClass":"EQUITY","sectorId":"UTIL","secCik":"0000753308","priceSource":"TIINGO"}
+{"instrumentId":"XNYS:PG","ticker":"PG","name":"Procter & Gamble","nameKo":"P&G","market":"XNYS","currency":"USD","assetClass":"EQUITY","sectorId":"CS","secCik":"0000080424","priceSource":"TIINGO"}
+{"instrumentId":"XNYS:XOM","ticker":"XOM","name":"Exxon Mobil","nameKo":"엑슨모빌","market":"XNYS","currency":"USD","assetClass":"EQUITY","sectorId":"ENE","secCik":"0000034088","priceSource":"TIINGO"}

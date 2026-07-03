@@ -1,0 +1,51 @@
+apiName: Fundamental
+displayName: 분기 재무
+description: 분기 주요 계정 (DART 전체 재무제표 / SEC companyfacts). 재무 인사이트의 원천.
+icon: file-spreadsheet
+color: surface-soft
+status: ACTIVE
+primaryKey: fundamentalId
+titleProperty: fundamentalId
+properties:
+  fundamentalId:
+    type: string
+    description: "{companyId}:{period} 예: KR:00266961:2026Q1"
+  companyId:
+    type: string
+  period:
+    type: string
+    description: "예: 2026Q1"
+  fiscalDate:
+    type: date
+    nullable: true
+    description: "분기 말일"
+  revenue:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  operatingIncome:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  netIncome:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  totalAssets:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  totalLiabilities:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  totalEquity:
+    type: double
+    nullable: true
+    owner: PIPELINE
+  currency:
+    type: string
+    enum: [KRW, USD]
+  source:
+    type: string
+    enum: [DART, SEC]

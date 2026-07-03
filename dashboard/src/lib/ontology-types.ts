@@ -1,6 +1,22 @@
 // 자동 생성 파일 — 편집 금지. 원천: ontology/*.yaml
 // 재생성: python scripts/codegen_ts.py
 
+/** 기업 — 상장사의 실체 정보 (DART 기업개황 / SEC submissions). 종목과 분리된 기업 노드. */
+export interface Company {
+  companyId: string;
+  name: string;
+  nameKo?: string;
+  market: "KR" | "US";
+  corpCode?: string;
+  cik?: string;
+  ceo?: string;
+  industryCode?: string;
+  industryName?: string;
+  foundedDate?: string;
+  homepage?: string;
+  updatedAt?: string;
+}
+
 /** 결정 — 사람이 내린 결정의 캡처 (추천 스냅샷 + 근거 + 결정). append-only, writeback 계층. */
 export interface Decision {
   decisionId: string;
@@ -51,7 +67,7 @@ export interface EarningsEvent {
 export interface EvaluationRun {
   runId: string;
   modelVersionId: string;
-  runType: "FACTOR_QUALITY" | "EVENT_STUDY" | "PROPOSAL_BACKTEST";
+  runType: "FACTOR_QUALITY" | "EVENT_STUDY" | "PROPOSAL_BACKTEST" | "WALK_FORWARD" | "DECISION_OUTCOME";
   metricSet: unknown;
   datasetRange: { start: string; end: string };
   passedGates: boolean;
@@ -88,10 +104,28 @@ export interface FactorExposure {
   stale?: boolean;
 }
 
+/** 분기 재무 — 분기 주요 계정 (DART 전체 재무제표 / SEC companyfacts). 재무 인사이트의 원천. */
+export interface Fundamental {
+  fundamentalId: string;
+  companyId: string;
+  period: string;
+  fiscalDate?: string;
+  revenue?: number;
+  operatingIncome?: number;
+  netIncome?: number;
+  totalAssets?: number;
+  totalLiabilities?: number;
+  totalEquity?: number;
+  currency: "KRW" | "USD";
+  source: "DART" | "SEC";
+}
+
 /** 인사이트 — 이벤트/리스크에서 도출된 해석. 이벤트 스터디로 검증되어야 VALIDATED. */
 export interface Insight {
   insightId: string;
-  insightType: "EVENT_IMPACT" | "LIMIT_BREACH" | "EXPOSURE_SHIFT" | "CONCENTRATION" | "FACTOR_MOVE";
+  insightType: "EVENT_IMPACT" | "LIMIT_BREACH" | "EXPOSURE_SHIFT" | "CONCENTRATION" | "FACTOR_MOVE" | "SECTOR_CONCENTRATION" | "SECTOR_EVENT_CLUSTER" | "CASH_ALLOCATION" | "NEWS_SENTIMENT_SHIFT" | "FUNDAMENTAL_SHIFT";
+  sectorId?: string;
+  recommendedAction?: { label: string; actionApiName?: string; paramsPreset?: unknown };
   title: string;
   narrative: string;
   severity: number;
@@ -112,7 +146,7 @@ export interface Instrument {
   market: "KRX" | "KOSDAQ" | "XNAS" | "XNYS" | "ARCA";
   currency: "KRW" | "USD";
   assetClass: "EQUITY" | "ETF";
-  sector?: string;
+  sectorId?: string;
   dartCorpCode?: string;
   secCik?: string;
   priceSource: "NAVER" | "TIINGO" | "YFINANCE";
@@ -148,8 +182,11 @@ export interface ModelVersion {
 /** 뉴스 이벤트 — RSS 뉴스 (Yahoo per-ticker / DART todayRSS). Event 인터페이스 구현. */
 export interface NewsEvent {
   publisher?: string;
-  feedSource: "YAHOO_RSS" | "DART_RSS";
+  feedSource: "YAHOO_RSS" | "DART_RSS" | "NAVER_NEWS" | "PRESS_RSS";
   tickerHint?: string;
+  sentiment?: number;
+  sentimentLabel?: "POSITIVE" | "NEGATIVE" | "NEUTRAL";
+  dupCount?: number;
   eventId: string;
   eventType: string;
   occurredAt: string;
@@ -177,7 +214,7 @@ export interface Position {
   portfolioId: string;
   instrumentId: string;
   quantity: number;
-  avgCostLocal: number;
+  avgCostLocal?: number;
   openedAt?: string;
   lastPriceLocal?: number;
   marketValueBase?: number;
@@ -225,11 +262,19 @@ export interface Scenario {
   createdBy?: string;
 }
 
+/** 섹터 — 산업 섹터. 종목 분류와 섹터 단위 리스크/인사이트의 축. */
+export interface Sector {
+  sectorId: string;
+  name: string;
+  nameKo: string;
+  colorToken?: string;
+}
+
 /** 인터페이스 이벤트 */
 export type Event = DisclosureEvent | EarningsEvent | MacroEvent | NewsEvent;
 
 /** 인터페이스 제안된 액션 */
 export type ProposedAction = RebalanceProposal;
 
-export type LinkTypeName = "decisionOnProposal" | "eventAffectsInstrument" | "eventDrivesFactor" | "exposureFactor" | "insightAboutInstrument" | "insightFromEvent" | "instrumentExposures" | "metricScopePortfolio" | "metricScopePosition" | "modelEvaluations" | "portfolioPositions" | "positionInstrument" | "proposalFromInsight" | "proposalValidatedBy" | "similarEvent";
-export type ObjectTypeName = "Decision" | "DisclosureEvent" | "EarningsEvent" | "EvaluationRun" | "Factor" | "FactorExposure" | "Insight" | "Instrument" | "MacroEvent" | "ModelVersion" | "NewsEvent" | "Portfolio" | "Position" | "RebalanceProposal" | "RiskMetric" | "Scenario";
+export type LinkTypeName = "companyListedAs" | "decisionOnProposal" | "eventAffectsInstrument" | "eventAffectsSector" | "eventDrivesFactor" | "exposureFactor" | "fundamentalOfCompany" | "insightAboutInstrument" | "insightFromEvent" | "instrumentExposures" | "instrumentInSector" | "metricScopePortfolio" | "metricScopePosition" | "modelEvaluations" | "portfolioPositions" | "positionInstrument" | "proposalFromInsight" | "proposalValidatedBy" | "similarEvent";
+export type ObjectTypeName = "Company" | "Decision" | "DisclosureEvent" | "EarningsEvent" | "EvaluationRun" | "Factor" | "FactorExposure" | "Fundamental" | "Insight" | "Instrument" | "MacroEvent" | "ModelVersion" | "NewsEvent" | "Portfolio" | "Position" | "RebalanceProposal" | "RiskMetric" | "Scenario" | "Sector";

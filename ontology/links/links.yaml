@@ -105,3 +105,33 @@ linkTypes:
     properties:
       similarity:
         type: double
+
+  - apiName: instrumentInSector
+    displayName: 소속 섹터
+    from: Instrument
+    to: Sector
+    cardinality: MANY_TO_ONE
+
+  - apiName: companyListedAs
+    displayName: 상장 종목
+    from: Company
+    to: Instrument
+    cardinality: ONE_TO_MANY
+
+  - apiName: fundamentalOfCompany
+    displayName: 재무 주체
+    from: Fundamental
+    to: Company
+    cardinality: MANY_TO_ONE
+
+  - apiName: eventAffectsSector
+    displayName: 이벤트→섹터 영향
+    from: Event
+    to: Sector
+    cardinality: MANY_TO_MANY
+    properties:
+      relevance:
+        type: double
+      method:
+        type: string
+        enum: [DIRECT, EMBEDDING, MAPPING]

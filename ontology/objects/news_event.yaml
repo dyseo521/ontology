@@ -13,8 +13,23 @@ properties:
     nullable: true
   feedSource:
     type: string
-    enum: [YAHOO_RSS, DART_RSS]
+    enum: [YAHOO_RSS, DART_RSS, NAVER_NEWS, PRESS_RSS]
   tickerHint:
     type: string
     nullable: true
     description: "피드 조회에 사용한 티커"
+  sentiment:
+    type: double
+    nullable: true
+    owner: PIPELINE
+    description: "-1(부정) ~ +1(긍정), KR-FinBERT"
+  sentimentLabel:
+    type: string
+    nullable: true
+    enum: [POSITIVE, NEGATIVE, NEUTRAL]
+    owner: PIPELINE
+  dupCount:
+    type: integer
+    nullable: true
+    owner: PIPELINE
+    description: "임베딩 dedupe 로 병합된 유사 기사 수"

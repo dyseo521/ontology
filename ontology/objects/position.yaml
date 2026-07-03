@@ -19,8 +19,9 @@ properties:
     owner: USER
   avgCostLocal:
     type: double
+    nullable: true
     owner: USER
-    description: "종목 통화 기준 평균 취득단가"
+    description: "종목 통화 기준 평균 취득단가. null 이면 수익률 미표시"
   openedAt:
     type: date
     nullable: true

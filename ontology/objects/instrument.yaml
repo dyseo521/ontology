@@ -28,9 +28,10 @@ properties:
   assetClass:
     type: string
     enum: [EQUITY, ETF]
-  sector:
+  sectorId:
     type: string
     nullable: true
+    description: "Sector 오브젝트 참조 (예: IT, FIN)"
   dartCorpCode:
     type: string
     nullable: true
