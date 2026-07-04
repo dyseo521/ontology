@@ -1,5 +1,5 @@
 {
- "asOf": "2026-07-03",
+ "asOf": "2026-07-04",
  "prices": {
   "ARCA:SPY": {
    "start": "2021-01-04",
@@ -173,7 +173,7 @@
   "KR:2023": 2743,
   "KR:2024": 2700,
   "KR:2025": 3667,
-  "KR:2026": 4776,
+  "KR:2026": 4876,
   "US:2015": 3,
   "US:2016": 25,
   "US:2017": 41,
@@ -194,11 +194,11 @@
   ],
   [
    "DISCLOSURE_OTHER",
-   6438
+   6439
   ],
   [
    "EARNINGS",
-   1334
+   1336
   ],
   [
    "PERIODIC_REPORT",
@@ -226,23 +226,23 @@
   ],
   [
    "EXEC_CHANGE",
-   206
+   210
+  ],
+  [
+   "ANALYST_RATING",
+   207
   ],
   [
    "RATE_SHOCK",
    180
-  ],
-  [
-   "ANALYST_RATING",
-   155
   ]
  ],
  "newsWindow": {
   "start": "2026-06-26",
-  "end": "2026-07-03",
-  "count": 317
+  "end": "2026-07-04",
+  "count": 416
  },
- "fundamentalsQuartersMedian": 13,
+ "fundamentalsQuartersMedian": 25,
  "eventStudyThinTypes": [
   {
    "eventType": "ACQUISITION",
@@ -274,13 +274,13 @@
   {
    "severity": "INFO",
    "area": "events",
-   "message": "KR 이벤트가 US 대비 15.0배 (겹치는 기간). 최다 타입 INSIDER_OWNERSHIP 7622건이 주 원인",
+   "message": "KR 이벤트가 US 대비 15.1배 (겹치는 기간). 최다 타입 INSIDER_OWNERSHIP 7622건이 주 원인",
    "fix": "이벤트 스터디는 타입×시장별이라 통계 왜곡 없음. 전파는 severity 가중으로 완충"
   },
   {
    "severity": "INFO",
    "area": "news",
-   "message": "뉴스 커버 기간이 7일 (소스가 최근 기사만 제공)",
+   "message": "뉴스 커버 기간이 8일 (소스가 최근 기사만 제공)",
    "fix": "뉴스는 이벤트 스터디에서 제외되어 과거 통계를 오염시키지 않음. 매일 누적으로 자연 확장"
   }
  ],
