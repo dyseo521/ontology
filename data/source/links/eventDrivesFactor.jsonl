@@ -366,3 +366,7 @@
 {"fromType":"MacroEvent","from":"macro:DCOILWTICO:2026-05-06","toType":"Factor","to":"MACRO:WTI","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DCOILWTICO:2026-05-20","toType":"Factor","to":"MACRO:WTI","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DCOILWTICO:2026-07-13","toType":"Factor","to":"MACRO:WTI","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-07-30","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-08-03","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-08-04","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:VIXCLS:2026-07-30","toType":"Factor","to":"MACRO:VIX","props":{"relevance":1.0,"method":"DIRECT"}}
