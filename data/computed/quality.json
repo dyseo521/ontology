@@ -1,10 +1,10 @@
 {
- "asOf": "2026-08-14",
+ "asOf": "2026-08-15",
  "prices": {
   "ARCA:SPY": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "KRX:000270": {
    "start": "2021-01-04",
@@ -108,63 +108,63 @@
   },
   "XNAS:AAPL": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNAS:GOOGL": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNAS:MSFT": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNAS:NVDA": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNAS:QQQ": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNAS:TSLA": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNYS:CAT": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNYS:JNJ": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNYS:JPM": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNYS:NEE": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNYS:PG": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   },
   "XNYS:XOM": {
    "start": "2021-01-04",
-   "end": "2026-08-13",
-   "rows": 1409
+   "end": "2026-08-14",
+   "rows": 1410
   }
  },
  "eventsByMarketYear": {
@@ -173,7 +173,7 @@
   "KR:2023": 2743,
   "KR:2024": 2700,
   "KR:2025": 3667,
-  "KR:2026": 8737,
+  "KR:2026": 9014,
   "US:2015": 3,
   "US:2016": 25,
   "US:2017": 41,
@@ -190,27 +190,27 @@
  "eventTypeTop": [
   [
    "INSIDER_OWNERSHIP",
-   8446
+   8458
   ],
   [
    "DISCLOSURE_OTHER",
-   6508
+   6529
   ],
   [
    "ANALYST_RATING",
-   1596
+   1677
   ],
   [
    "EARNINGS",
-   1510
+   1538
   ],
   [
    "NEWS",
-   1129
+   1212
   ],
   [
    "PERIODIC_REPORT",
-   604
+   622
   ],
   [
    "MAJOR_HOLDINGS",
@@ -222,7 +222,7 @@
   ],
   [
    "EXEC_CHANGE",
-   311
+   321
   ],
   [
    "SUPPLY_CONTRACT",
@@ -234,15 +234,15 @@
   ],
   [
    "ACQUISITION",
-   228
+   249
   ]
  ],
  "newsWindow": {
   "start": "2026-06-26",
-  "end": "2026-08-14",
-  "count": 3343
+  "end": "2026-08-15",
+  "count": 3569
  },
- "fundamentalsQuartersMedian": 25,
+ "fundamentalsQuartersMedian": 26,
  "eventStudyThinTypes": [
   {
    "eventType": "ACQUISITION",
@@ -259,7 +259,7 @@
   {
    "severity": "INFO",
    "area": "events",
-   "message": "KR 이벤트가 US 대비 18.0배 (겹치는 기간). 최다 타입 INSIDER_OWNERSHIP 8446건이 주 원인",
+   "message": "KR 이벤트가 US 대비 18.2배 (겹치는 기간). 최다 타입 INSIDER_OWNERSHIP 8458건이 주 원인",
    "fix": "이벤트 스터디는 타입×시장별이라 통계 왜곡 없음. 전파는 severity 가중으로 완충"
   }
  ],
