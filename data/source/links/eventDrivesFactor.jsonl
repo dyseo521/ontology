@@ -370,3 +370,4 @@
 {"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-08-03","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-08-04","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:VIXCLS:2026-07-30","toType":"Factor","to":"MACRO:VIX","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:T10Y2Y:2026-08-19","toType":"Factor","to":"MACRO:T10Y2Y","props":{"relevance":1.0,"method":"DIRECT"}}
