@@ -373,3 +373,4 @@
 {"fromType":"MacroEvent","from":"macro:T10Y2Y:2026-08-19","toType":"Factor","to":"MACRO:T10Y2Y","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-08-19","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:T10Y2Y:2026-08-28","toType":"Factor","to":"MACRO:T10Y2Y","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DGS2:2026-08-28","toType":"Factor","to":"MACRO:DGS2","props":{"relevance":1.0,"method":"DIRECT"}}
