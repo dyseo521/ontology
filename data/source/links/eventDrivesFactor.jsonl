@@ -386,3 +386,5 @@
 {"fromType":"MacroEvent","from":"macro:DCOILWTICO:2026-09-28","toType":"Factor","to":"MACRO:WTI","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DGS2:2026-10-01","toType":"Factor","to":"MACRO:DGS2","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:BAMLH0A0HYM2:2026-10-01","toType":"Factor","to":"MACRO:HY_OAS","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:BAMLH0A0HYM2:2026-10-02","toType":"Factor","to":"MACRO:HY_OAS","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DEXKOUS:2026-10-02","toType":"Factor","to":"MACRO:USDKRW","props":{"relevance":1.0,"method":"DIRECT"}}

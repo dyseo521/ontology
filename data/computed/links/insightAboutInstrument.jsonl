@@ -1,3 +1,6 @@
+{"fromType":"Insight","from":"ins_event_macro_DEXKOUS_2026-10-02","toType":"Instrument","to":"KRX:005380"}
+{"fromType":"Insight","from":"ins_event_macro_DEXKOUS_2026-10-02","toType":"Instrument","to":"KRX:096770"}
+{"fromType":"Insight","from":"ins_event_macro_DEXKOUS_2026-10-02","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_0110004667139","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_0110004667139","toType":"Instrument","to":"XNAS:AAPL"}
 {"fromType":"Insight","from":"ins_event_naver_0110004667139","toType":"Instrument","to":"XNAS:MSFT"}
@@ -7,9 +10,6 @@
 {"fromType":"Insight","from":"ins_event_naver_0140005582767","toType":"Instrument","to":"KRX:005380"}
 {"fromType":"Insight","from":"ins_event_naver_0140005582767","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_0140005582767","toType":"Instrument","to":"XNYS:JPM"}
-{"fromType":"Insight","from":"ins_event_naver_0140005583488","toType":"Instrument","to":"KRX:105560"}
-{"fromType":"Insight","from":"ins_event_naver_0140005583488","toType":"Instrument","to":"XNAS:AAPL"}
-{"fromType":"Insight","from":"ins_event_naver_0140005583488","toType":"Instrument","to":"XNAS:MSFT"}
 {"fromType":"Insight","from":"ins_event_naver_0150005338055","toType":"Instrument","to":"KRX:096770"}
 {"fromType":"Insight","from":"ins_event_naver_0150005338055","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_0150005338055","toType":"Instrument","to":"XNYS:JPM"}
@@ -24,9 +24,8 @@
 {"fromType":"Insight","from":"ins_fund_KRX_068270_2026Q1","toType":"Instrument","to":"KRX:068270"}
 {"fromType":"Insight","from":"ins_fund_KRX_096770_2026Q1","toType":"Instrument","to":"KRX:096770"}
 {"fromType":"Insight","from":"ins_fund_XNAS_NVDA_2026Q2","toType":"Instrument","to":"XNAS:NVDA"}
-{"fromType":"Insight","from":"ins_seccluster_CD_2026-10-02","toType":"Instrument","to":"KRX:005380"}
-{"fromType":"Insight","from":"ins_seccluster_FIN_2026-10-02","toType":"Instrument","to":"KRX:105560"}
-{"fromType":"Insight","from":"ins_seccluster_FIN_2026-10-02","toType":"Instrument","to":"XNYS:JPM"}
-{"fromType":"Insight","from":"ins_signal_KRX_207940_2026-10-02","toType":"Instrument","to":"KRX:207940"}
-{"fromType":"Insight","from":"ins_signal_XNAS_TSLA_2026-10-02","toType":"Instrument","to":"XNAS:TSLA"}
-{"fromType":"Insight","from":"ins_signal_XNYS_NEE_2026-10-02","toType":"Instrument","to":"XNYS:NEE"}
+{"fromType":"Insight","from":"ins_seccluster_CD_2026-10-06","toType":"Instrument","to":"KRX:005380"}
+{"fromType":"Insight","from":"ins_seccluster_FIN_2026-10-06","toType":"Instrument","to":"KRX:105560"}
+{"fromType":"Insight","from":"ins_seccluster_FIN_2026-10-06","toType":"Instrument","to":"XNYS:JPM"}
+{"fromType":"Insight","from":"ins_signal_KRX_097950_2026-10-06","toType":"Instrument","to":"KRX:097950"}
+{"fromType":"Insight","from":"ins_signal_KRX_207940_2026-10-06","toType":"Instrument","to":"KRX:207940"}
