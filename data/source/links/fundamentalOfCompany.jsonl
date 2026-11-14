@@ -748,3 +748,8 @@
 {"fromType":"Fundamental","from":"US:0000320193:2026Q3","toType":"Company","to":"US:0000320193"}
 {"fromType":"Fundamental","from":"US:0000019617:2026Q3","toType":"Company","to":"US:0000019617"}
 {"fromType":"Fundamental","from":"US:0000018230:2026Q3","toType":"Company","to":"US:0000018230"}
+{"fromType":"Fundamental","from":"KR:00155319:2026Q3","toType":"Company","to":"KR:00155319"}
+{"fromType":"Fundamental","from":"KR:00159616:2026Q3","toType":"Company","to":"KR:00159616"}
+{"fromType":"Fundamental","from":"KR:00266961:2026Q3","toType":"Company","to":"KR:00266961"}
+{"fromType":"Fundamental","from":"KR:00258801:2026Q3","toType":"Company","to":"KR:00258801"}
+{"fromType":"Fundamental","from":"KR:01515323:2026Q3","toType":"Company","to":"KR:01515323"}

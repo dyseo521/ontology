@@ -410,3 +410,5 @@
 {"fromType":"MacroEvent","from":"macro:DGS10:2026-11-10","toType":"Factor","to":"MACRO:DGS10","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DGS2:2026-11-10","toType":"Factor","to":"MACRO:DGS2","props":{"relevance":1.0,"method":"DIRECT"}}
 {"fromType":"MacroEvent","from":"macro:DCOILWTICO:2026-11-04","toType":"Factor","to":"MACRO:WTI","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DGS10:2026-11-12","toType":"Factor","to":"MACRO:DGS10","props":{"relevance":1.0,"method":"DIRECT"}}
+{"fromType":"MacroEvent","from":"macro:DGS2:2026-11-12","toType":"Factor","to":"MACRO:DGS2","props":{"relevance":1.0,"method":"DIRECT"}}
