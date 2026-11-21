@@ -1,5 +1,8 @@
-{"fromType":"Insight","from":"ins_event_naver_0110004681962","toType":"Instrument","to":"KRX:105560"}
-{"fromType":"Insight","from":"ins_event_naver_0110004681962","toType":"Instrument","to":"XNYS:JPM"}
+{"fromType":"Insight","from":"ins_event_naver_0090005766811","toType":"Instrument","to":"KRX:105560"}
+{"fromType":"Insight","from":"ins_event_naver_0090005766811","toType":"Instrument","to":"XNYS:JPM"}
+{"fromType":"Insight","from":"ins_event_naver_0150005354739","toType":"Instrument","to":"KRX:005380"}
+{"fromType":"Insight","from":"ins_event_naver_0150005354739","toType":"Instrument","to":"KRX:105560"}
+{"fromType":"Insight","from":"ins_event_naver_0150005354739","toType":"Instrument","to":"XNYS:JPM"}
 {"fromType":"Insight","from":"ins_event_naver_0160002724379","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_0160002724379","toType":"Instrument","to":"XNAS:AAPL"}
 {"fromType":"Insight","from":"ins_event_naver_0160002724379","toType":"Instrument","to":"XNAS:MSFT"}
@@ -11,12 +14,9 @@
 {"fromType":"Insight","from":"ins_event_naver_0290003060039","toType":"Instrument","to":"XNYS:JPM"}
 {"fromType":"Insight","from":"ins_event_naver_1230002394305","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_1230002394305","toType":"Instrument","to":"XNYS:JPM"}
-{"fromType":"Insight","from":"ins_event_naver_2770005842278","toType":"Instrument","to":"KRX:005380"}
-{"fromType":"Insight","from":"ins_event_naver_2770005842278","toType":"Instrument","to":"XNAS:AAPL"}
-{"fromType":"Insight","from":"ins_event_naver_2770005842278","toType":"Instrument","to":"XNAS:MSFT"}
-{"fromType":"Insight","from":"ins_event_naver_2930000093229","toType":"Instrument","to":"KRX:005490"}
-{"fromType":"Insight","from":"ins_event_naver_2930000093229","toType":"Instrument","to":"KRX:105560"}
-{"fromType":"Insight","from":"ins_event_naver_2930000093229","toType":"Instrument","to":"XNYS:JPM"}
+{"fromType":"Insight","from":"ins_event_naver_4210009295681","toType":"Instrument","to":"KRX:105560"}
+{"fromType":"Insight","from":"ins_event_naver_4210009295681","toType":"Instrument","to":"XNAS:AAPL"}
+{"fromType":"Insight","from":"ins_event_naver_4210009295681","toType":"Instrument","to":"XNAS:MSFT"}
 {"fromType":"Insight","from":"ins_event_naver_6290000552556","toType":"Instrument","to":"KRX:105560"}
 {"fromType":"Insight","from":"ins_event_naver_6290000552556","toType":"Instrument","to":"XNAS:AAPL"}
 {"fromType":"Insight","from":"ins_event_naver_6290000552556","toType":"Instrument","to":"XNAS:MSFT"}
